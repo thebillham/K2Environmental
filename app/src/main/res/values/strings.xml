@@ -1,0 +1,75 @@
+<!--
+  ~  Copyright (C) 2017 MINDORKS NEXTGEN PRIVATE LIMITED
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      https://mindorks.com/license/apache-v2
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License
+  -->
+
+<resources>
+    <string name="app_name">K2E</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="unregistered_message">This account is not registered with K2 Environmental</string>
+
+    <string name="signout_message">You have successfully signed out</string>
+
+    <string name="jobnotfound">The job number could not be found</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+
+
+    <!--Google Login-->
+
+
+    <string name="btn_logout_from_google">Logout from Google</string>
+
+    <string name="btn_revoke_access">Revoke Access</string>
+
+    <string name="action_search">Job Number</string>
+
+    <!--Toolbar menus-->
+
+    <!--Drawer-->
+
+    <!--Drawer Menus-->
+
+    <!--App Message-->
+
+    <!--Login-->
+
+    <!--Login Validation-->
+
+    <!--about fragment-->
+
+    <!--rating dialog-->
+
+    <!--play store-->
+    <string name="app_google_play_store_link">"https://play.google.com/store/apps/details?id="</string>
+    <string name="app_market_link">"market://details?id="</string>
+
+    <!--button-->
+
+    <!--feed-->
+
+    <!--empty state-->
+    <string name="empty_screen">No jobs found\nSwipe down to refresh</string>
+    <string name="please_retry">Please Retry</string>
+    <string name="retry">Retry</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

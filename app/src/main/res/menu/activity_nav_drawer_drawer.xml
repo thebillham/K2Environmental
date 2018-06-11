@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_my_jobs"
+            android:icon="@drawable/ic_my_jobs"
+            android:title="My Jobs" />
+
+        <item
+            android:id="@+id/nav_current_tasks"
+            android:icon="@drawable/ic_current_tasks"
+            android:title="Current Tasks"/>
+
+        <item
+            android:id="@+id/nav_lab"
+            android:icon="@drawable/ic_asbestos_lab"
+            android:title="Asbestos Lab" />
+
+        <item
+            android:id="@+id/nav_notifications"
+            android:icon="@drawable/ic_notifications"
+            android:title="Notifications" />
+
+        <item
+            android:id="@+id/nav_calendar"
+            android:icon="@drawable/ic_calendar"
+            android:title="Calendar" />
+
+    </group>
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_my_details"
+            android:icon="@drawable/ic_my_details"
+            android:title="My Details" />
+
+        <item
+            android:id="@+id/nav_my_training"
+            android:icon="@drawable/ic_training"
+            android:title="Training"/>
+
+        <item
+            android:id="@+id/nav_equipment"
+            android:icon="@drawable/ic_equipment"
+            android:title="Equipment" />
+
+    </group>
+
+    <item android:title="Settings">
+        <menu>
+            <item
+                android:id="@+id/nav_app_settings"
+                android:icon="@drawable/ic_app_settings"
+                android:title="App Settings"/>
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout"
+                android:title="Log Out" />
+        </menu>
+    </item>
+
+</menu>
