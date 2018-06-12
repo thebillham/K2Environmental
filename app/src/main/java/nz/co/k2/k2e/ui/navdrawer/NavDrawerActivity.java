@@ -61,6 +61,7 @@ AppSettingsFragment.OnFragmentInteractionListener {
     ViewModelProvider.Factory mViewModelFactory;
     private ActivityNavDrawerBinding activityNavDrawerBinding;
     private NavDrawerViewModel mNavDrawerViewModel;
+    private DrawerLayout mDrawer;
 
     @Override
     public int getBindingVariable() {
@@ -122,11 +123,8 @@ AppSettingsFragment.OnFragmentInteractionListener {
                 .commit();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //
-            }
+        fab.setOnClickListener(view -> {
+            //
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -159,6 +157,8 @@ AppSettingsFragment.OnFragmentInteractionListener {
         navigationView.setNavigationItemSelectedListener(this);
 
         mNavDrawerViewModel.onNavMenuCreated();
+
+        mDrawer = activityNavDrawerBinding.drawerLayout;
     }
 
     public static Intent newIntent(Context context) {
@@ -261,7 +261,15 @@ AppSettingsFragment.OnFragmentInteractionListener {
 
     }
 
-    public void popFragment(){
-        getSupportFragmentManager().popBackStackImmediate();
+    private void lockDrawer() {
+        if (mDrawer != null) {
+            mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
+    }
+
+    private void unlockDrawer() {
+        if (mDrawer != null) {
+            mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        }
     }
 }

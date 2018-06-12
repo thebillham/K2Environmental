@@ -27,7 +27,6 @@ import nz.co.k2.k2e.R;
 import nz.co.k2.k2e.ui.base.BaseFragment;
 import nz.co.k2.k2e.databinding.FragmentWfmBinding;
 
-// TODO Make this a pop out fragment or activity, not linked with NavDrawer
 public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
         implements WfmNavigator, WfmAdapter.WfmAdapterListener {
 
@@ -83,12 +82,9 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = super.onCreateView(inflater, container, savedInstanceState);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.wfmSwipeRefresh);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(true);
-                mWfmViewModel.loadWfmJobsFromApi(swipeRefreshLayout,null);
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            swipeRefreshLayout.setRefreshing(true);
+            mWfmViewModel.loadWfmJobsFromApi(swipeRefreshLayout,null);
         });
         searchView = (SearchView) view.findViewById(R.id.wfmSearchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
