@@ -101,7 +101,7 @@ public class AppDataManager implements DataManager {
      */
 
     @Override
-    public Single<List<WfmJob>> getWfmApiCall(String jobNumber) {
+    public Observable<List<WfmJob>> getWfmApiCall(String jobNumber) {
         return mApiHelper.getWfmApiCall(jobNumber);
     }
 
@@ -134,6 +134,22 @@ public class AppDataManager implements DataManager {
     public Single<Boolean> isWfmListEmpty() {
         return mDbHelper.isWfmListEmpty();
     }
+
+    // Look for list of WFM jobs in Database, check API if database is empty
+    public Observable<List<WfmJob>> getWfmList(Boolean forceRefresh) {
+        if (forceRefresh){
+            return getWfmApiCall(null);
+        } else {
+            return getAllWfmJobs()
+                    .flatMap(wfmJobs -> wfmJobs.isEmpty()
+                            ? getWfmApiCall(null)
+                            : Observable.just(wfmJobs));
+        }
+    }
+
+    /**
+     *  JOBS
+     */
 
     @Override
     public Observable<List<BaseJob>> getAllJobs() {

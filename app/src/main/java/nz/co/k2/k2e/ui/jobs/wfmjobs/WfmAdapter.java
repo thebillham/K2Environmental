@@ -14,6 +14,8 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import io.reactivex.CompletableObserver;
+import io.reactivex.disposables.Disposable;
 import nz.co.k2.k2e.data.model.db.WfmJob;
 import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
 import nz.co.k2.k2e.ui.base.BaseViewHolder;
@@ -80,17 +82,14 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public void addItems(List<WfmItemViewModel> repoList) {
-        Log.d("BenD", "Additems " + repoList.size());
         mWfmResponseList.clear();
         mWfmResponseList.addAll(repoList);
         mWfmCache.clear();
         mWfmCache.addAll(repoList);
-        Log.d("BenD", "Cache size is " + mWfmCache.size());
         notifyDataSetChanged();
     }
 
     public void updateItems(List<WfmItemViewModel> repoList) {
-        Log.d("BenD", "Update items " + repoList.size());
         mWfmResponseList.clear();
         mWfmResponseList.addAll(repoList);
         notifyDataSetChanged();
@@ -156,7 +155,24 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         public void onClick(View v) {
             Log.d("BenD", String.valueOf(getAdapterPosition()));
             String jobNumber = mWfmResponseList.get(getAdapterPosition()).jobNumber.get();
-            mWfmViewModel.addNewJobToList(jobNumber, CommonUtils.getActivity(v));
+            mWfmViewModel.addNewJobToList(jobNumber)
+                    .subscribe(new CompletableObserver(){
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                            //
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            // Job added, return to Jobs Fragment
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+                    });
         }
     }
 

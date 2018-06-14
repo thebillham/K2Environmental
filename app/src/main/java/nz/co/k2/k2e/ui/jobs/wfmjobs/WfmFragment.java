@@ -18,10 +18,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import io.reactivex.CompletableObserver;
+import io.reactivex.disposables.Disposable;
 import nz.co.k2.k2e.BR;
 import nz.co.k2.k2e.R;
 import nz.co.k2.k2e.ui.base.BaseFragment;
@@ -67,6 +70,13 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
     }
 
     @Override
+    public void onItemClick(String jobNumber) {
+        // Card has been clicked
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
+        Toast.makeText(getContext(), jobNumber + " has been added to your jobs.", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
     public void handleError(Throwable throwable) {
         // handle error
     }
@@ -84,7 +94,22 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.wfmSwipeRefresh);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(true);
-            mWfmViewModel.loadWfmJobsFromApi(swipeRefreshLayout,null);
+            mWfmViewModel.loadWfmItems(true).subscribe(new CompletableObserver() {
+                @Override
+                public void onSubscribe(Disposable d) {
+                    //
+                }
+
+                @Override
+                public void onComplete() {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+            });
         });
         searchView = (SearchView) view.findViewById(R.id.wfmSearchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -95,7 +120,7 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
                 if (!nonEmptyList) {
                     // Do Wfm API call to the job number entered
                     Log.d("BenD", "Searching WFM for " + query);
-                    mWfmViewModel.loadWfmJobsFromApi(swipeRefreshLayout, query);
+                    mWfmViewModel.getWfmJobByNumber(query);
                     mWfmAdapter.filterJobs(query);
                 }
                 return true;
@@ -116,7 +141,7 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
 
     @Override
     public void onRetryClick() {
-        mWfmViewModel.loadWfmJobsFromApi(null,null);
+        //
     }
 
     @Override

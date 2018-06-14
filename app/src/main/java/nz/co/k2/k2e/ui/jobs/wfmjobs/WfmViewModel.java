@@ -17,7 +17,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import nz.co.k2.k2e.data.DataManager;
@@ -35,14 +37,11 @@ public class WfmViewModel extends BaseViewModel<WfmNavigator> {
 
     private final MutableLiveData<List<WfmItemViewModel>> wfmItemsLiveData;
 
-    public Observable<Boolean> forceRefresh;
-
     public WfmViewModel(DataManager dataManager,
                                SchedulerProvider schedulerProvider) {
         super(dataManager, schedulerProvider);
         wfmItemsLiveData = new MutableLiveData<>();
-        loadWfmJobs(null);
-
+        loadWfmItems(false);
     }
 
     public void addWfmItemsToList(List<WfmItemViewModel> wfmItems) {
@@ -50,112 +49,34 @@ public class WfmViewModel extends BaseViewModel<WfmNavigator> {
         wfmItemViewModels.addAll(wfmItems);
     }
 
-    public void writeJobsToDb(List<WfmJob> wfmJobs) {
-        Log.d("BenD", wfmJobs.size() + " WFMJobs in list");
-        getDataManager().saveAllWfmJobs(wfmJobs)
-                .observeOn(getSchedulerProvider().ui())
-                .subscribeOn(getSchedulerProvider().io())
-                .subscribe(new SingleObserver<Long>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(Long aLong) {
-                        if (wfmJobs != null) {
-                            Log.d("BenD", "wfmJobList size: " + wfmJobs.size());
-                            wfmItemsLiveData.setValue(getViewModelList(wfmJobs));
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.getStackTrace();
-                    }
-                });
-    }
-
-    // Decide whether to load from the room database or api
-//    @SuppressLint("CheckResult")
-    public void loadWfmJobs(String jobNumber){
-        getCompositeDisposable().add(
-        getDataManager().isWfmListEmpty()
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(isEmpty -> {
-                    if(isEmpty) {
-                        // Database is empty, refresh
-                        loadWfmJobsFromApi(null, jobNumber);
-                    } else {
-                        if (jobNumber == null){ loadWfmJobsFromDb(); }
-                    }
-                }, throwable -> {
-                    // handle error
-                }));
-    }
-
-    // This function gets WfmJobs from the API and saves to DB
-    public void loadWfmJobsFromApi(SwipeRefreshLayout swipeRefreshLayout, String jobNumber) {
-            Log.d("BenD","wfmJobs is empty, look for API");
-            setIsLoading(true);
-            getCompositeDisposable().add(getDataManager()
-                    .getWfmApiCall(jobNumber)
-                    .subscribeOn(getSchedulerProvider().io())
-                    .observeOn(getSchedulerProvider().ui())
-                    .subscribe(wfmResponse -> {
-                        if (wfmResponse != null) {
-                            writeJobsToDb(wfmResponse);
-                            if (swipeRefreshLayout != null){ swipeRefreshLayout.setRefreshing(false); }
-                        }
-                        setIsLoading(false);
-                    }, throwable -> {
-                        setIsLoading(false);
-                        getNavigator().handleError(throwable);
-                    }));
-    }
-
-    public void loadWfmJobsFromDb() {
-        Log.d("BenD","wfmJobs retrieved from database");
-        getCompositeDisposable().add(getDataManager()
-                .getAllWfmJobs()
+    public Completable loadWfmItems(Boolean forceRefresh) {
+        return (Completable) getDataManager()
+                .getWfmList(forceRefresh)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(wfmJobList -> {
-                    if (wfmJobList != null) {
-                        Log.d("BenD", "wfmJobList size: " + wfmJobList.size());
-                        wfmItemsLiveData.setValue(getViewModelList(wfmJobList));
-                    }
-                }, throwable -> {
-                    getNavigator().handleError(throwable);
-                }));
-    }
-
+                        if (!wfmJobList.isEmpty()){
+                            getDataManager().saveAllWfmJobs(wfmJobList);
+                            wfmItemsLiveData.setValue(getViewModelList(wfmJobList));
+                        }
+                });
+        }
 
     // This function takes a jobnumber and converts the WFM Job to a new Base Job, it then
     // returns to the main job screen
     @SuppressLint("CheckResult")
-    public void addNewJobToList(String jobNumber, Activity activity) {
-        Log.d("BenD", "Add new job " + jobNumber);
-        getDataManager().getWfmApiCall(jobNumber)
-                .toObservable()
+    public Completable addNewJobToList(String jobNumber) {
+        return (Completable) getDataManager().getWfmApiCall(jobNumber)
                 .subscribeOn(getSchedulerProvider().io())
                 /**
                  * Get WFM Response and save to DB
                  */
-
-                .flatMap(wfmJobs -> {
-                    Log.d("BenD", "Flatmap save to DB: " + wfmJobs.get(0).getJobNumber());
-                    return getDataManager().saveAllWfmJobs(wfmJobs).toObservable();
-                })
+                .flatMap(wfmJobs -> { return getDataManager().saveAllWfmJobs(wfmJobs).toObservable();})
                 /**
                  * Knowing that the WfmJob has been saved to the DB, we can retrieve it and create
                  * a BaseJob from it
                  */
-                .flatMap(id -> {
-                    Log.d("BenD", "Flatmap get job with this id: " + id);
-                    return getDataManager().getWfmJobById(id).toObservable();
-                })
+                .flatMap(id -> { return getDataManager().getWfmJobById(id).toObservable(); })
                 /**
                  * Now we have the WFM Job we just need to map it to the BaseJob
                  * and add it to the DB
@@ -175,19 +96,12 @@ public class WfmViewModel extends BaseViewModel<WfmNavigator> {
                     return getDataManager().insertJob(baseJob).toObservable();
                 })
                 .observeOn(getSchedulerProvider().ui())
-                .subscribe(id -> {
-                    Log.d("BenD","ID: " + id);
-                    ((FragmentActivity)activity).getSupportFragmentManager().popBackStackImmediate();
-                    // TODO add more information in the toast here
-                    Toast.makeText(activity, "Job has been added to your jobs", Toast.LENGTH_LONG).show();
-                }, throwable -> {
-
-                });
+                .subscribe();
     }
 
-        // This function creates a new BaseJob object and returns to the job screen
-    public void getWfmJobByNumber(String jobNumber, BaseJob baseJob) {
 
+    public Single<WfmJob> getWfmJobByNumber(String jobNumber) {
+        return getDataManager().getWfmJobByNumber(jobNumber);
     }
 
     public ObservableList<WfmItemViewModel> getWfmItemViewModels() {

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import nz.co.k2.k2e.data.model.db.WfmJob;
 
@@ -22,12 +23,12 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Single<List<WfmJob>> getWfmApiCall(String jobNumber) {
+    public Observable<List<WfmJob>> getWfmApiCall(String jobNumber) {
         return Rx2AndroidNetworking.get(ApiEndPoint.ENDPOINT_WFM)
                 .addQueryParameter("apiKey",ApiEndPoint.API_KEY)
                 .addQueryParameter("job",jobNumber)
                 .build()
-                .getObjectListSingle(WfmJob.class);
+                .getObjectListObservable(WfmJob.class);
     }
 
 //    public ApiHeader getApiHeader() { return mApiHeader; }

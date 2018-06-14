@@ -2,6 +2,7 @@ package nz.co.k2.k2e.data.remote;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import nz.co.k2.k2e.data.model.db.WfmJob;
 
@@ -9,7 +10,7 @@ import nz.co.k2.k2e.data.model.db.WfmJob;
 
 public interface ApiHelper {
 
-    Single<List<WfmJob>> getWfmApiCall(String jobNumber);
+    Observable<List<WfmJob>> getWfmApiCall(String jobNumber);
 
     //    ApiHeader getApiHeader();
 }
