@@ -4,28 +4,23 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import nz.co.k2.k2e.BR;
 import nz.co.k2.k2e.R;
-import nz.co.k2.k2e.ui.base.BaseFragment;
 import nz.co.k2.k2e.databinding.FragmentWfmBinding;
+import nz.co.k2.k2e.ui.base.BaseFragment;
 
 // TODO Make this a pop out fragment or activity, not linked with NavDrawer
 public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
@@ -87,7 +82,11 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
-                mWfmViewModel.loadWfmJobsFromApi(swipeRefreshLayout,null);
+                if (mWfmViewModel.getWfmList(true)){
+                    if (!mWfmViewModel.success){
+                        Toast.makeText(getActivity(),"No jobs found on WorkflowMax", Toast.LENGTH_SHORT).show();
+                    }
+                    swipeRefreshLayout.setRefreshing(false);}
             }
         });
         searchView = (SearchView) view.findViewById(R.id.wfmSearchView);
@@ -99,7 +98,11 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
                 if (!nonEmptyList) {
                     // Do Wfm API call to the job number entered
                     Log.d("BenD", "Searching WFM for " + query);
-                    mWfmViewModel.loadWfmJobsFromApi(swipeRefreshLayout, query);
+                    if (mWfmViewModel.getWfmJobByNumber(query)){
+                        if (!mWfmViewModel.success){
+                            Toast.makeText(getActivity(),"Job not found on WorkflowMax", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                     mWfmAdapter.filterJobs(query);
                 }
                 return true;
@@ -119,8 +122,14 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
     }
 
     @Override
+    public void onItemClick(String jobNumber) {
+        Toast.makeText(getActivity(),jobNumber + " was added to your jobs.", Toast.LENGTH_LONG).show();
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    @Override
     public void onRetryClick() {
-        mWfmViewModel.loadWfmJobsFromApi(null,null);
+        mWfmViewModel.getWfmList(true);
     }
 
     @Override

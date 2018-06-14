@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 
-
 import java.util.List;
 import java.util.Set;
 
@@ -13,6 +12,7 @@ import javax.inject.Singleton;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.disposables.CompositeDisposable;
 import nz.co.k2.k2e.data.local.db.DbHelper;
 import nz.co.k2.k2e.data.local.prefs.PreferencesHelper;
 import nz.co.k2.k2e.data.model.db.WfmJob;
@@ -33,6 +33,8 @@ public class AppDataManager implements DataManager {
     private final PreferencesHelper mPreferencesHelper;
 
     private String userEmail = "";
+
+    public CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Inject
     public AppDataManager(Context context, DbHelper dbHelper, PreferencesHelper preferencesHelper, ApiHelper apiHelper, Gson gson) {
@@ -99,14 +101,13 @@ public class AppDataManager implements DataManager {
     /**
      * WFM
      */
-
     @Override
     public Single<List<WfmJob>> getWfmApiCall(String jobNumber) {
         return mApiHelper.getWfmApiCall(jobNumber);
     }
 
     @Override
-    public Observable<List<WfmJob>> getAllWfmJobs() {
+    public Single<List<WfmJob>> getAllWfmJobs() {
         return mDbHelper.getAllWfmJobs();
     }
 
@@ -180,5 +181,15 @@ public class AppDataManager implements DataManager {
         mPreferencesHelper.setCurrentUserName(userName);
         mPreferencesHelper.setCurrentUserEmail(email);
         mPreferencesHelper.setCurrentUserProfilePicUrl(profilePicPath);
+    }
+
+    @Override
+    public Single<List<WfmJob>> getWfmList(Boolean forceRefresh) {
+        if (forceRefresh){
+            return getWfmApiCall(null);
+        } else return getAllWfmJobs()
+                .flatMap(wfmList -> wfmList.isEmpty()
+                                ? getWfmApiCall(null)
+                                : Single.just(wfmList));
     }
 }

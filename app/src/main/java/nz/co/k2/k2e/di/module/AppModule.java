@@ -1,13 +1,9 @@
 package nz.co.k2.k2e.di.module;
 
 import android.app.Application;
-import android.app.Fragment;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -15,8 +11,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import nz.co.k2.k2e.BuildConfig;
-import nz.co.k2.k2e.R;
 import nz.co.k2.k2e.data.AppDataManager;
 import nz.co.k2.k2e.data.DataManager;
 import nz.co.k2.k2e.data.local.db.AppDatabase;
@@ -24,7 +18,6 @@ import nz.co.k2.k2e.data.local.db.AppDbHelper;
 import nz.co.k2.k2e.data.local.db.DbHelper;
 import nz.co.k2.k2e.data.local.prefs.AppPreferencesHelper;
 import nz.co.k2.k2e.data.local.prefs.PreferencesHelper;
-//import nz.co.k2.k2e.data.remote.ApiHeader;
 import nz.co.k2.k2e.data.remote.ApiHelper;
 import nz.co.k2.k2e.data.remote.AppApiHelper;
 import nz.co.k2.k2e.di.ApiInfo;
@@ -33,6 +26,8 @@ import nz.co.k2.k2e.di.PreferenceInfo;
 import nz.co.k2.k2e.utils.AppConstants;
 import nz.co.k2.k2e.utils.rx.AppSchedulerProvider;
 import nz.co.k2.k2e.utils.rx.SchedulerProvider;
+
+//import nz.co.k2.k2e.data.remote.ApiHeader;
 
 @Module
 public class AppModule {

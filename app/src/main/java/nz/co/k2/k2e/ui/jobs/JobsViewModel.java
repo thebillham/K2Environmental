@@ -1,10 +1,8 @@
 package nz.co.k2.k2e.ui.jobs;
 
-import android.annotation.SuppressLint;
 import android.arch.lifecycle.MutableLiveData;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableList;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -14,8 +12,6 @@ import io.reactivex.Observable;
 import nz.co.k2.k2e.data.DataManager;
 import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
 import nz.co.k2.k2e.ui.base.BaseViewModel;
-import nz.co.k2.k2e.ui.jobs.JobsItemViewModel;
-import nz.co.k2.k2e.ui.jobs.JobsNavigator;
 import nz.co.k2.k2e.utils.rx.SchedulerProvider;
 
 public class JobsViewModel extends BaseViewModel<JobsNavigator> {
@@ -131,7 +127,7 @@ public class JobsViewModel extends BaseViewModel<JobsNavigator> {
                         Log.d("BenD","Size of livedata: " + jobsItemsLiveData.getValue().size());
                     }
                 }, throwable -> {
-                    getNavigator().handleError(throwable);
+                    throwable.getStackTrace();
                 }));
     }
 

@@ -10,6 +10,8 @@ public class WfmJob {
     @PrimaryKey (autoGenerate = true)
     public Long uid;
 
+    private String Status;
+
     private String jobNumber;
 
     private String address;
@@ -156,5 +158,13 @@ public class WfmJob {
 
     public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
+    }
+
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
     }
 }

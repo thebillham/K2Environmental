@@ -1,19 +1,10 @@
 package nz.co.k2.k2e.ui.navdrawer;
 
-import android.content.Intent;
 import android.databinding.ObservableField;
 import android.text.TextUtils;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-
-import javax.inject.Inject;
-
 import nz.co.k2.k2e.data.DataManager;
 import nz.co.k2.k2e.ui.base.BaseViewModel;
-import nz.co.k2.k2e.ui.login.GoogleLoginActivity;
 import nz.co.k2.k2e.utils.rx.SchedulerProvider;
 
 public class NavDrawerViewModel extends BaseViewModel<NavDrawerNavigator> {

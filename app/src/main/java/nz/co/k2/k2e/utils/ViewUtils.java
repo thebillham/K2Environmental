@@ -1,20 +1,6 @@
 package nz.co.k2.k2e.utils;
 
-import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.widget.ImageView;
-
-import java.io.InputStream;
-import java.net.URL;
-
-import nz.co.k2.k2e.R;
 
 public final class ViewUtils {
 

@@ -2,16 +2,22 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "9bb10bdf8872992414f432343a2107e7",
+    "identityHash": "afff37c567cb82b8cca86f1ff123f8dc",
     "entities": [
       {
         "tableName": "wfm_jobs",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT, `jobNumber` TEXT, `address` TEXT, `description` TEXT, `clientName` TEXT, `clientOrderNumber` TEXT, `state` TEXT, `type` TEXT, `startDate` TEXT, `dueDate` TEXT, `completedDate` TEXT, `contactName` TEXT, `manager` TEXT, `partner` TEXT, `contactNumber` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT, `Status` TEXT, `jobNumber` TEXT, `address` TEXT, `description` TEXT, `clientName` TEXT, `clientOrderNumber` TEXT, `state` TEXT, `type` TEXT, `startDate` TEXT, `dueDate` TEXT, `completedDate` TEXT, `contactName` TEXT, `manager` TEXT, `partner` TEXT, `contactNumber` TEXT)",
         "fields": [
           {
             "fieldPath": "uid",
             "columnName": "uid",
             "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "Status",
+            "columnName": "Status",
+            "affinity": "TEXT",
             "notNull": false
           },
           {
@@ -161,7 +167,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"9bb10bdf8872992414f432343a2107e7\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"afff37c567cb82b8cca86f1ff123f8dc\")"
     ]
   }
 }

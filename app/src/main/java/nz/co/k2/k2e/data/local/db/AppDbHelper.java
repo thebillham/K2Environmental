@@ -1,6 +1,5 @@
 package nz.co.k2.k2e.data.local.db;
 
-import android.databinding.ObservableBoolean;
 import android.util.Log;
 
 import java.util.List;
@@ -9,9 +8,7 @@ import java.util.concurrent.Callable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import io.reactivex.Completable;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.Single;
 import nz.co.k2.k2e.data.model.db.WfmJob;
 import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
@@ -31,8 +28,8 @@ public class AppDbHelper implements DbHelper {
 
     // Get all Wfm Jobs from local database
     @Override
-    public Observable<List<WfmJob>> getAllWfmJobs() {
-        return Observable.fromCallable(new Callable<List<WfmJob>>() {
+    public Single<List<WfmJob>> getAllWfmJobs() {
+        return Single.fromCallable(new Callable<List<WfmJob>>() {
             @Override
             public List<WfmJob> call() throws Exception {
                 return mAppDatabase.wfmJobDao().loadAll();

@@ -1,7 +1,5 @@
 package nz.co.k2.k2e.ui.jobs.wfmjobs;
 
-import android.app.Activity;
-import android.arch.lifecycle.ViewModelProvider;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,15 +9,9 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import nz.co.k2.k2e.data.model.db.WfmJob;
-import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
-import nz.co.k2.k2e.ui.base.BaseViewHolder;
 import nz.co.k2.k2e.databinding.ItemWfmEmptyViewBinding;
 import nz.co.k2.k2e.databinding.ItemWfmViewBinding;
-import nz.co.k2.k2e.utils.CommonUtils;
+import nz.co.k2.k2e.ui.base.BaseViewHolder;
 
 public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
@@ -105,7 +97,7 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public interface WfmAdapterListener {
-
+        void onItemClick(String jobNumber);
         void onRetryClick();
     }
 
@@ -156,7 +148,9 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         public void onClick(View v) {
             Log.d("BenD", String.valueOf(getAdapterPosition()));
             String jobNumber = mWfmResponseList.get(getAdapterPosition()).jobNumber.get();
-            mWfmViewModel.addNewJobToList(jobNumber, CommonUtils.getActivity(v));
+            if (mWfmViewModel.addNewJobToList(jobNumber)) {
+                mListener.onItemClick(jobNumber);
+            }
         }
     }
 

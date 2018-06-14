@@ -30,7 +30,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import dagger.android.support.AndroidSupportInjection;
-import dagger.android.support.DaggerFragment;
 
 public abstract class BaseFragment<T extends ViewDataBinding, V extends BaseViewModel> extends Fragment {
 

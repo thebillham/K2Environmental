@@ -5,8 +5,6 @@ import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
 
-import java.util.UUID;
-
 @Entity
 public class User {
     @Expose

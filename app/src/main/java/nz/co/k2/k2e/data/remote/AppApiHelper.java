@@ -23,7 +23,7 @@ public class AppApiHelper implements ApiHelper {
 
     @Override
     public Single<List<WfmJob>> getWfmApiCall(String jobNumber) {
-        return Rx2AndroidNetworking.get(ApiEndPoint.ENDPOINT_WFM)
+        return Rx2AndroidNetworking.get(ApiEndPoint.ENDPOINT_WFM + "/wfm/job.php")
                 .addQueryParameter("apiKey",ApiEndPoint.API_KEY)
                 .addQueryParameter("job",jobNumber)
                 .build()

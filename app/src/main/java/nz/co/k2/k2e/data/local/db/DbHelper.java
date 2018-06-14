@@ -19,7 +19,6 @@ package nz.co.k2.k2e.data.local.db;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.Single;
 import nz.co.k2.k2e.data.model.db.WfmJob;
 import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
@@ -27,7 +26,7 @@ import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
 public interface DbHelper {
 // TODO Replace with Entities
     // WFM
-    Observable<List<WfmJob>> getAllWfmJobs();
+    Single<List<WfmJob>> getAllWfmJobs();
     Single<WfmJob> getWfmJobByNumber(String jobNumber);
     Single<WfmJob> getWfmJobById(Long id);
     Single<Long> saveAllWfmJobs(List<WfmJob> wfmJobs);

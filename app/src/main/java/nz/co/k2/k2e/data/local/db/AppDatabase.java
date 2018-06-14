@@ -8,7 +8,7 @@ import nz.co.k2.k2e.data.local.db.dao.WfmJobDao;
 import nz.co.k2.k2e.data.model.db.WfmJob;
 import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
 
-@Database(entities = {WfmJob.class, BaseJob.class}, version = 4)
+@Database(entities = {WfmJob.class, BaseJob.class}, version = 5)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract WfmJobDao wfmJobDao();

@@ -20,8 +20,8 @@ import javax.inject.Named;
 
 import nz.co.k2.k2e.BR;
 import nz.co.k2.k2e.R;
-import nz.co.k2.k2e.ui.base.BaseFragment;
 import nz.co.k2.k2e.databinding.FragmentJobsBinding;
+import nz.co.k2.k2e.ui.base.BaseFragment;
 import nz.co.k2.k2e.ui.jobs.wfmjobs.WfmFragment;
 
 public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewModel>

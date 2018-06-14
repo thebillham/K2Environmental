@@ -3,16 +3,8 @@ package nz.co.k2.k2e.data.model.db.jobs;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.gson.annotations.Expose;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.UUID;
-
-import nz.co.k2.k2e.data.model.db.WfmJob;
 
 @Entity (tableName = "jobs")
 public class BaseJob {

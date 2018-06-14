@@ -2,17 +2,13 @@ package nz.co.k2.k2e.data.local.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.inject.Inject;
 
-import nz.co.k2.k2e.data.DataManager;
 import nz.co.k2.k2e.di.PreferenceInfo;
-import nz.co.k2.k2e.utils.AppConstants;
 
 // TODO Preferences section
 

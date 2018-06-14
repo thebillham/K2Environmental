@@ -12,13 +12,13 @@ import android.provider.Settings;
 import android.util.Patterns;
 import android.view.View;
 
-import nz.co.k2.k2e.R;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import nz.co.k2.k2e.R;
 
 public final class CommonUtils {
 
