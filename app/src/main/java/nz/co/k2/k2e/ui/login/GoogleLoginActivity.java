@@ -111,7 +111,12 @@ public class GoogleLoginActivity extends AppCompatActivity implements
 
     private void signOut(int message){
         mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, task -> updateUI(null, message));
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        GoogleLoginActivity.this.updateUI(null, message);
+                    }
+                });
     }
 
     private void updateUI(@Nullable GoogleSignInAccount account, int message) {

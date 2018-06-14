@@ -165,7 +165,7 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                         @Override
                         public void onComplete() {
                             // Job added, return to Jobs Fragment
-
+                            mWfmViewModel.getNavigator().onItemClick(jobNumber);
                         }
 
                         @Override

@@ -18,10 +18,15 @@ import java.util.Locale;
 import java.util.UUID;
 
 import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import nz.co.k2.k2e.data.DataManager;
 import nz.co.k2.k2e.data.model.db.WfmJob;
 import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
@@ -30,6 +35,9 @@ import nz.co.k2.k2e.utils.rx.SchedulerProvider;
 
 import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
+
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 
 public class WfmViewModel extends BaseViewModel<WfmNavigator> {
 
@@ -49,16 +57,16 @@ public class WfmViewModel extends BaseViewModel<WfmNavigator> {
         wfmItemViewModels.addAll(wfmItems);
     }
 
-    public Completable loadWfmItems(Boolean forceRefresh) {
-        return (Completable) getDataManager()
+    public Observable loadWfmItems(Boolean forceRefresh) {
+        return (Observable) getDataManager()
                 .getWfmList(forceRefresh)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
-                .subscribe(wfmJobList -> {
-                        if (!wfmJobList.isEmpty()){
-                            getDataManager().saveAllWfmJobs(wfmJobList);
-                            wfmItemsLiveData.setValue(getViewModelList(wfmJobList));
-                        }
+                .subscribe(wfmJobs -> {
+                    if (!wfmJobs.isEmpty()) {
+                        WfmViewModel.this.getDataManager().saveAllWfmJobs(wfmJobs);
+                        wfmItemsLiveData.setValue(getViewModelList(wfmJobs));
+                    }
                 });
         }
 
@@ -71,29 +79,42 @@ public class WfmViewModel extends BaseViewModel<WfmNavigator> {
                 /**
                  * Get WFM Response and save to DB
                  */
-                .flatMap(wfmJobs -> { return getDataManager().saveAllWfmJobs(wfmJobs).toObservable();})
+                .flatMap(new Function<List<WfmJob>, ObservableSource<? extends Long>>() {
+                    @Override
+                    public ObservableSource<? extends Long> apply(List<WfmJob> wfmJobs) throws Exception {
+                        return WfmViewModel.this.getDataManager().saveAllWfmJobs(wfmJobs).toObservable();
+                    }
+                })
                 /**
                  * Knowing that the WfmJob has been saved to the DB, we can retrieve it and create
                  * a BaseJob from it
                  */
-                .flatMap(id -> { return getDataManager().getWfmJobById(id).toObservable(); })
+                .flatMap(new Function<Long, ObservableSource<? extends WfmJob>>() {
+                    @Override
+                    public ObservableSource<? extends WfmJob> apply(Long id) throws Exception {
+                        return WfmViewModel.this.getDataManager().getWfmJobById(id).toObservable();
+                    }
+                })
                 /**
                  * Now we have the WFM Job we just need to map it to the BaseJob
                  * and add it to the DB
                  */
-                .flatMap(wfmJob -> {
-                    Log.d("BenD", "Flatmap, make BaseJob with this: " + wfmJob.getJobNumber());
-                    BaseJob baseJob = new BaseJob();
-                    Log.d("BenD", "Copying from job: " + wfmJob.getJobNumber());
-                    baseJob.setUuid(UUID.randomUUID().toString());
-                    baseJob.setJobNumber(wfmJob.getJobNumber());
-                    baseJob.setAddress(wfmJob.getAddress());
-                    baseJob.setClientName(wfmJob.getClientName());
-                    baseJob.setJobType(wfmJob.getType());
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                    baseJob.setLastModified(dateFormat.format(new Date()));
-                    Log.d("BenD", "Address from rx: " + wfmJob.getAddress());
-                    return getDataManager().insertJob(baseJob).toObservable();
+                .flatMap(new Function<WfmJob, ObservableSource<? extends Long>>() {
+                    @Override
+                    public ObservableSource<? extends Long> apply(WfmJob wfmJob) throws Exception {
+                        Log.d("BenD", "Flatmap, make BaseJob with this: " + wfmJob.getJobNumber());
+                        BaseJob baseJob = new BaseJob();
+                        Log.d("BenD", "Copying from job: " + wfmJob.getJobNumber());
+                        baseJob.setUuid(UUID.randomUUID().toString());
+                        baseJob.setJobNumber(wfmJob.getJobNumber());
+                        baseJob.setAddress(wfmJob.getAddress());
+                        baseJob.setClientName(wfmJob.getClientName());
+                        baseJob.setJobType(wfmJob.getType());
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                        baseJob.setLastModified(dateFormat.format(new Date()));
+                        Log.d("BenD", "Address from rx: " + wfmJob.getAddress());
+                        return WfmViewModel.this.getDataManager().insertJob(baseJob).toObservable();
+                    }
                 })
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe();

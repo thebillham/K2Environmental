@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
 import nz.co.k2.k2e.data.DataManager;
 import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
 import nz.co.k2.k2e.ui.base.BaseViewModel;
@@ -123,15 +124,21 @@ public class JobsViewModel extends BaseViewModel<JobsNavigator> {
                 .getAllJobs()
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
-                .subscribe(jobsList -> {
-                    if (jobsList != null) {
-                        Log.d("BenD", "JobList size: " + jobsList.size());
-                        Log.d("BenD","getViewModelList size: " + getViewModelList(jobsList));
-                        jobsItemsLiveData.setValue(getViewModelList(jobsList));
-                        Log.d("BenD","Size of livedata: " + jobsItemsLiveData.getValue().size());
+                .subscribe(new Consumer<List<BaseJob>>() {
+                    @Override
+                    public void accept(List<BaseJob> jobsList) throws Exception {
+                        if (jobsList != null) {
+                            Log.d("BenD", "JobList size: " + jobsList.size());
+                            Log.d("BenD", "getViewModelList size: " + JobsViewModel.this.getViewModelList(jobsList));
+                            jobsItemsLiveData.setValue(JobsViewModel.this.getViewModelList(jobsList));
+                            Log.d("BenD", "Size of livedata: " + jobsItemsLiveData.getValue().size());
+                        }
                     }
-                }, throwable -> {
-                    getNavigator().handleError(throwable);
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        JobsViewModel.this.getNavigator().handleError(throwable);
+                    }
                 }));
     }
 

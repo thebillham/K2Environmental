@@ -12,7 +12,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Single;
+import io.reactivex.functions.Function;
 import nz.co.k2.k2e.data.local.db.DbHelper;
 import nz.co.k2.k2e.data.local.prefs.PreferencesHelper;
 import nz.co.k2.k2e.data.model.db.WfmJob;
@@ -141,9 +143,14 @@ public class AppDataManager implements DataManager {
             return getWfmApiCall(null);
         } else {
             return getAllWfmJobs()
-                    .flatMap(wfmJobs -> wfmJobs.isEmpty()
-                            ? getWfmApiCall(null)
-                            : Observable.just(wfmJobs));
+                    .flatMap(new Function<List<WfmJob>, ObservableSource<? extends List<WfmJob>>>() {
+                        @Override
+                        public ObservableSource<? extends List<WfmJob>> apply(List<WfmJob> wfmJobs) throws Exception {
+                            return wfmJobs.isEmpty()
+                                    ? AppDataManager.this.getWfmApiCall(null)
+                                    : Observable.just(wfmJobs);
+                        }
+                    });
         }
     }
 

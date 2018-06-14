@@ -1,5 +1,6 @@
 package nz.co.k2.k2e.ui.jobs;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -80,10 +83,13 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = super.onCreateView(inflater, container, savedInstanceState);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.jobsSwipeRefresh);
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            Toast.makeText(container.getContext(),"Cannot Refresh",Toast.LENGTH_LONG);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Toast.makeText(container.getContext(), "Cannot Refresh", Toast.LENGTH_LONG);
 //                swipeRefreshLayout.setRefreshing(true);
 //                mJobsViewModel.loadJobsFromApi(swipeRefreshLayout);
+            }
         });
 //        searchView = (SearchView) view.findViewById(R.id.JobsSearchView);
 //        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -117,13 +123,16 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
         super.onResume();
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
-        fab.setOnClickListener(v -> {
-            // Go to Add Jobs screen
-            getActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.flContent, new WfmFragment())
-                .addToBackStack("wfm")
-                .commit();
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Go to Add Jobs screen
+                JobsFragment.this.getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.flContent, new WfmFragment())
+                        .addToBackStack("wfm")
+                        .commit();
+            }
         });
     }
 
@@ -151,7 +160,12 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
 
     private void subscribeToLiveData() {
         mJobsViewModel.getJobsRepos().observe(this,
-                JobsItemViewModels -> mJobsViewModel.addJobsItemsToList(JobsItemViewModels));
+                new Observer<List<JobsItemViewModel>>() {
+                    @Override
+                    public void onChanged(@Nullable List<JobsItemViewModel> JobsItemViewModels) {
+                        mJobsViewModel.addJobsItemsToList(JobsItemViewModels);
+                    }
+                });
     }
 
     private void showAboutFragment() {

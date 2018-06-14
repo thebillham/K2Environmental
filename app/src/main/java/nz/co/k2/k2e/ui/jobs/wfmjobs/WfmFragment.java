@@ -1,5 +1,6 @@
 package nz.co.k2.k2e.ui.jobs.wfmjobs;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +20,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import org.reactivestreams.Subscriber;
+
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -92,24 +97,13 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = super.onCreateView(inflater, container, savedInstanceState);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.wfmSwipeRefresh);
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            swipeRefreshLayout.setRefreshing(true);
-            mWfmViewModel.loadWfmItems(true).subscribe(new CompletableObserver() {
-                @Override
-                public void onSubscribe(Disposable d) {
-                    //
-                }
-
-                @Override
-                public void onComplete() {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-
-                @Override
-                public void onError(Throwable e) {
-
-                }
-            });
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+                mWfmViewModel.loadWfmItems(true).
+                        subscribe()
+            }
         });
         searchView = (SearchView) view.findViewById(R.id.wfmSearchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -162,7 +156,12 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
 
     private void subscribeToLiveData() {
         mWfmViewModel.getWfmRepos().observe(this,
-                wfmItemViewModels -> mWfmViewModel.addWfmItemsToList(wfmItemViewModels));
+                new Observer<List<WfmItemViewModel>>() {
+                    @Override
+                    public void onChanged(@Nullable List<WfmItemViewModel> wfmItemViewModels) {
+                        mWfmViewModel.addWfmItemsToList(wfmItemViewModels);
+                    }
+                });
     }
 
 
