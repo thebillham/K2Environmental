@@ -1,22 +1,17 @@
 package nz.co.k2.k2e.ui.jobs;
 
-import android.annotation.SuppressLint;
 import android.arch.lifecycle.MutableLiveData;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableList;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.functions.Consumer;
 import nz.co.k2.k2e.data.DataManager;
 import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
 import nz.co.k2.k2e.ui.base.BaseViewModel;
-import nz.co.k2.k2e.ui.jobs.JobsItemViewModel;
-import nz.co.k2.k2e.ui.jobs.JobsNavigator;
 import nz.co.k2.k2e.utils.rx.SchedulerProvider;
 
 public class JobsViewModel extends BaseViewModel<JobsNavigator> {
@@ -124,21 +119,15 @@ public class JobsViewModel extends BaseViewModel<JobsNavigator> {
                 .getAllJobs()
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
-                .subscribe(new Consumer<List<BaseJob>>() {
-                    @Override
-                    public void accept(List<BaseJob> jobsList) throws Exception {
-                        if (jobsList != null) {
-                            Log.d("BenD", "JobList size: " + jobsList.size());
-                            Log.d("BenD", "getViewModelList size: " + JobsViewModel.this.getViewModelList(jobsList));
-                            jobsItemsLiveData.setValue(JobsViewModel.this.getViewModelList(jobsList));
-                            Log.d("BenD", "Size of livedata: " + jobsItemsLiveData.getValue().size());
-                        }
+                .subscribe(jobsList -> {
+                    if (jobsList != null) {
+                        Log.d("BenD", "JobList size: " + jobsList.size());
+                        Log.d("BenD","getViewModelList size: " + getViewModelList(jobsList));
+                        jobsItemsLiveData.setValue(getViewModelList(jobsList));
+                        Log.d("BenD","Size of livedata: " + jobsItemsLiveData.getValue().size());
                     }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        JobsViewModel.this.getNavigator().handleError(throwable);
-                    }
+                }, throwable -> {
+                    throwable.getStackTrace();
                 }));
     }
 

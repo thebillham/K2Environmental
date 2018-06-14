@@ -1,21 +1,13 @@
 package nz.co.k2.k2e.ui.jobs.wfmjobs;
 
 import android.content.Context;
-import android.databinding.BindingAdapter;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
 
-import javax.inject.Inject;
-
-import io.reactivex.Completable;
 import nz.co.k2.k2e.R;
-import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
 
 public class WfmItemViewModel {
     public final ObservableField<String> jobNumber = new ObservableField<>();

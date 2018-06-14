@@ -30,11 +30,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import nz.co.k2.k2e.ui.login.GoogleLoginActivity;
+import dagger.android.AndroidInjection;
 import nz.co.k2.k2e.utils.CommonUtils;
 import nz.co.k2.k2e.utils.NetworkUtils;
-
-import dagger.android.AndroidInjection;
 
 public abstract class BaseActivity<T extends ViewDataBinding, V extends BaseViewModel> extends AppCompatActivity
         implements BaseFragment.Callback {

@@ -16,7 +16,6 @@
 
 package nz.co.k2.k2e.data.local.prefs;
 
-import java.util.ArrayList;
 import java.util.Set;
 
 public interface PreferencesHelper {

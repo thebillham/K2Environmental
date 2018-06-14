@@ -1,7 +1,5 @@
 package nz.co.k2.k2e.ui.jobs.wfmjobs;
 
-import android.app.Activity;
-import android.arch.lifecycle.ViewModelProvider;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,17 +9,9 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import io.reactivex.CompletableObserver;
-import io.reactivex.disposables.Disposable;
-import nz.co.k2.k2e.data.model.db.WfmJob;
-import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
-import nz.co.k2.k2e.ui.base.BaseViewHolder;
 import nz.co.k2.k2e.databinding.ItemWfmEmptyViewBinding;
 import nz.co.k2.k2e.databinding.ItemWfmViewBinding;
-import nz.co.k2.k2e.utils.CommonUtils;
+import nz.co.k2.k2e.ui.base.BaseViewHolder;
 
 public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
@@ -82,14 +72,17 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public void addItems(List<WfmItemViewModel> repoList) {
+        Log.d("BenD", "Additems " + repoList.size());
         mWfmResponseList.clear();
         mWfmResponseList.addAll(repoList);
         mWfmCache.clear();
         mWfmCache.addAll(repoList);
+        Log.d("BenD", "Cache size is " + mWfmCache.size());
         notifyDataSetChanged();
     }
 
     public void updateItems(List<WfmItemViewModel> repoList) {
+        Log.d("BenD", "Update items " + repoList.size());
         mWfmResponseList.clear();
         mWfmResponseList.addAll(repoList);
         notifyDataSetChanged();
@@ -104,7 +97,7 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public interface WfmAdapterListener {
-
+        void onItemClick(String jobNumber);
         void onRetryClick();
     }
 
@@ -155,24 +148,9 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         public void onClick(View v) {
             Log.d("BenD", String.valueOf(getAdapterPosition()));
             String jobNumber = mWfmResponseList.get(getAdapterPosition()).jobNumber.get();
-            mWfmViewModel.addNewJobToList(jobNumber)
-                    .subscribe(new CompletableObserver(){
-                        @Override
-                        public void onSubscribe(Disposable d) {
-                            //
-                        }
-
-                        @Override
-                        public void onComplete() {
-                            // Job added, return to Jobs Fragment
-                            mWfmViewModel.getNavigator().onItemClick(jobNumber);
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-                    });
+            if (mWfmViewModel.addNewJobToList(jobNumber)) {
+                mListener.onItemClick(jobNumber);
+            }
         }
     }
 

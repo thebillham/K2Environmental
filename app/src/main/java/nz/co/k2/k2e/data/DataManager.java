@@ -1,16 +1,12 @@
 package nz.co.k2.k2e.data;
 
-import java.util.List;
-
-import io.reactivex.Observable;
 import nz.co.k2.k2e.data.local.db.DbHelper;
 import nz.co.k2.k2e.data.local.prefs.PreferencesHelper;
-
-import nz.co.k2.k2e.data.model.db.WfmJob;
 import nz.co.k2.k2e.data.remote.ApiHelper;
+import nz.co.k2.k2e.ui.jobs.wfmjobs.WfmHelper;
 
 
-public interface DataManager extends DbHelper, PreferencesHelper, ApiHelper {
+public interface DataManager extends DbHelper, PreferencesHelper, ApiHelper, WfmHelper {
     String userEmail="";
 
     public String getUserEmail();
@@ -21,8 +17,6 @@ public interface DataManager extends DbHelper, PreferencesHelper, ApiHelper {
             String userName,
             String email,
             String profilePicPath);
-
-    Observable<List<WfmJob>> getWfmList(Boolean forceRefresh);
 
     enum LoggedInMode {
 
