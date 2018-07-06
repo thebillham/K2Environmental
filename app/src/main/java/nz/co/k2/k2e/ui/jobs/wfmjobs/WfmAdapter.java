@@ -6,9 +6,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
 import nz.co.k2.k2e.databinding.ItemWfmEmptyViewBinding;
 import nz.co.k2.k2e.databinding.ItemWfmViewBinding;
 import nz.co.k2.k2e.ui.base.BaseViewHolder;
@@ -146,12 +156,59 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @Override
         public void onClick(View v) {
-            Log.d("BenD", String.valueOf(getAdapterPosition()));
             String jobNumber = mWfmResponseList.get(getAdapterPosition()).jobNumber.get();
-            if (mWfmViewModel.addNewJobToList(jobNumber)) {
-                mListener.onItemClick(jobNumber);
+            // This function takes a jobnumber and converts the WFM Job to a new Base Job, it then
+            // returns to the main job screen
+            mWfmViewModel.getDataManager().getWfmApiCall(jobNumber)
+                        .subscribeOn(Schedulers.io())
+                        /*
+                          Get WFM Response and save to DB
+                         */
+
+                        .flatMap(wfmJobs -> {
+                            return mWfmViewModel.getDataManager().saveAllWfmJobs(wfmJobs);
+                        })
+                        /*
+                          Knowing that the WfmJob has been saved to the DB, we can retrieve it and create
+                          a BaseJob from it
+                         */
+                        .flatMap(id -> {
+                            return mWfmViewModel.getDataManager().getWfmJobById(id);
+                        })
+                        /*
+                          Now we have the WFM Job we just need to map it to the BaseJob
+                          and add it to the DB
+                         */
+                        .flatMap(wfmJob -> {
+                            BaseJob baseJob = new BaseJob();
+                            baseJob.setUuid(UUID.randomUUID().toString());
+                            baseJob.setJobNumber(wfmJob.getJobNumber());
+                            baseJob.setAddress(wfmJob.getAddress());
+                            baseJob.setClientName(wfmJob.getClientName());
+                            baseJob.setJobType(wfmJob.getType());
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                            baseJob.setLastModified(dateFormat.format(new Date()));
+                            Log.d("BenD", "Address from rx: " + wfmJob.getAddress());
+                            return mWfmViewModel.getDataManager().insertJob(baseJob);
+                        })
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new SingleObserver<Long>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onSuccess(Long aLong) {
+                                mListener.onItemClick(jobNumber);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+                        });
             }
-        }
     }
 
 

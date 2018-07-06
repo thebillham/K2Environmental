@@ -82,11 +82,12 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = super.onCreateView(inflater, container, savedInstanceState);
+        Log.d("BenD","onCreateView");
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.jobsSwipeRefresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Toast.makeText(container.getContext(), "Cannot Refresh", Toast.LENGTH_LONG);
+                Toast.makeText(container.getContext(), "Cannot Refresh", Toast.LENGTH_LONG).show();
 //                swipeRefreshLayout.setRefreshing(true);
 //                mJobsViewModel.loadJobsFromApi(swipeRefreshLayout);
             }
@@ -121,18 +122,16 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
     public void onResume()
     {
         super.onResume();
+        Log.d("BenD","onResume");
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Go to Add Jobs screen
-                JobsFragment.this.getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.flContent, new WfmFragment())
-                        .addToBackStack("wfm")
-                        .commit();
-            }
+        fab.setOnClickListener(v -> {
+            // Go to Add Jobs screen
+            JobsFragment.this.getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.flContent, new WfmFragment())
+                    .addToBackStack("wfm")
+                    .commit();
         });
     }
 
@@ -144,6 +143,7 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d("BenD","onViewCreated");
         mFragmentJobsBinding = getViewDataBinding();
         setUp();
         subscribeToLiveData();
@@ -156,6 +156,8 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
         Log.d("BenD","Jobs fragment set up 2 " + mFragmentJobsBinding.jobsRecycler.getLayoutManager().toString());
         mFragmentJobsBinding.jobsRecycler.setItemAnimator(new DefaultItemAnimator());
         mFragmentJobsBinding.jobsRecycler.setAdapter(mJobsAdapter);
+
+        mJobsAdapter.notifyDataSetChanged();
     }
 
     private void subscribeToLiveData() {

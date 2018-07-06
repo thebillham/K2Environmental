@@ -11,8 +11,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import nz.co.k2.k2e.data.DataManager;
 import nz.co.k2.k2e.data.model.db.WfmJob;
 import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
@@ -55,51 +57,6 @@ public class WfmViewModel extends BaseViewModel<WfmNavigator> {
                         success = true;
                     }
                 }));
-    }
-
-    // This function takes a jobnumber and converts the WFM Job to a new Base Job, it then
-    // returns to the main job screen
-    public Boolean addNewJobToList(String jobNumber) {
-        Log.d("BenD", "Add new job " + jobNumber);
-        return getCompositeDisposable()
-                .add(getDataManager().getWfmApiCall(jobNumber)
-                .subscribeOn(getSchedulerProvider().io())
-                /**
-                 * Get WFM Response and save to DB
-                 */
-
-                .flatMap(wfmJobs -> {
-                    Log.d("BenD", "Flatmap save to DB: " + wfmJobs.get(0).getJobNumber());
-                    return getDataManager().saveAllWfmJobs(wfmJobs);
-                })
-                /**
-                 * Knowing that the WfmJob has been saved to the DB, we can retrieve it and create
-                 * a BaseJob from it
-                 */
-                .flatMap(id -> {
-                    Log.d("BenD", "Flatmap get job with this id: " + id);
-                    return getDataManager().getWfmJobById(id);
-                })
-                /**
-                 * Now we have the WFM Job we just need to map it to the BaseJob
-                 * and add it to the DB
-                 */
-                .flatMap(wfmJob -> {
-                    Log.d("BenD", "Flatmap, make BaseJob with this: " + wfmJob.getJobNumber());
-                    BaseJob baseJob = new BaseJob();
-                    Log.d("BenD", "Copying from job: " + wfmJob.getJobNumber());
-                    baseJob.setUuid(UUID.randomUUID().toString());
-                    baseJob.setJobNumber(wfmJob.getJobNumber());
-                    baseJob.setAddress(wfmJob.getAddress());
-                    baseJob.setClientName(wfmJob.getClientName());
-                    baseJob.setJobType(wfmJob.getType());
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                    baseJob.setLastModified(dateFormat.format(new Date()));
-                    Log.d("BenD", "Address from rx: " + wfmJob.getAddress());
-                    return getDataManager().insertJob(baseJob);
-                })
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe());
     }
 
     // gets job by number and adds to

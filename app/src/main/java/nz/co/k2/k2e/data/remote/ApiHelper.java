@@ -10,7 +10,7 @@ import nz.co.k2.k2e.data.model.db.WfmJob;
 
 public interface ApiHelper {
 
-    Observable<List<WfmJob>> getWfmApiCall(String jobNumber);
+    Single<List<WfmJob>> getWfmApiCall(String jobNumber);
 
     //    ApiHeader getApiHeader();
 }
