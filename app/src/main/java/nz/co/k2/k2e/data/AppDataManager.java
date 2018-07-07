@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
@@ -103,7 +104,8 @@ public class AppDataManager implements DataManager {
      */
     @Override
     public Single<List<WfmJob>> getWfmApiCall(String jobNumber) {
-        return mApiHelper.getWfmApiCall(jobNumber);
+        return mApiHelper.getWfmApiCall(jobNumber).map(wList -> {saveAllWfmJobs(wList);
+        return wList;});
     }
 
     @Override
@@ -164,6 +166,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Single<Boolean> isJobListEmpty() {
         return mDbHelper.isJobListEmpty();
+    }
+
+    @Override
+    public Completable deleteJob(String jobNumber) {
+        return mDbHelper.deleteJob(jobNumber);
     }
 
     @Override

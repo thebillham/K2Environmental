@@ -1,8 +1,13 @@
 package nz.co.k2.k2e.ui.jobs;
 
+import android.graphics.Color;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,7 +21,7 @@ import nz.co.k2.k2e.databinding.ItemJobsViewBinding;
 import nz.co.k2.k2e.ui.base.BaseViewHolder;
 
 public class JobsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
-
+    // TODO find out why adapters aren't injecting ViewModels
     public static final int VIEW_TYPE_EMPTY = 0;
 
     public static final int VIEW_TYPE_NORMAL = 1;
@@ -26,6 +31,9 @@ public class JobsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private final List<JobsItemViewModel> mJobsCache;
 
     private JobsAdapterListener mListener;
+
+    private boolean multiSelect = false;
+    private ArrayList<Integer> selectedItems = new ArrayList<Integer>();
 
     @Inject
     public JobsViewModel mJobsViewModel;
@@ -55,6 +63,14 @@ public class JobsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public void onBindViewHolder(BaseViewHolder holder, int position) {
+        holder.itemView.setOnLongClickListener(v -> {
+            ((AppCompatActivity)v.getContext()).startSupportActionMode(actionModeCallbacks);
+            selectItem(position);
+            return true;
+        });
+        holder.itemView.setOnClickListener(v -> {
+            selectItem(position);
+        });
         holder.onBind(position);
     }
 
@@ -145,6 +161,11 @@ public class JobsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             // the next frame. There are times, however, when binding must be executed immediately.
             // To force execution, use the executePendingBindings() method.
             mBinding.executePendingBindings();
+            if (selectedItems.contains(position)) {
+                mJobsItemViewModel.setGrey();
+            } else {
+                mJobsItemViewModel.setWhite();
+            }
         }
 
         @Override
@@ -184,5 +205,56 @@ public class JobsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             }
         }
 //        notifyDataSetChanged();
+    }
+
+    /*
+    http://blog.teamtreehouse.com/contextual-action-bars-removing-items-recyclerview
+     */
+    private ActionMode.Callback actionModeCallbacks = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            multiSelect = true;
+            menu.add("Delete");
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            for (Integer intItem : selectedItems) {
+                mJobsResponseList.remove(intItem);
+                Log.d("BenD",intItem.toString());
+                Log.d("BenD", mJobsResponseList.get(intItem).getJobNumber());
+                Log.d("BenD",mJobsViewModel.toString());
+                mJobsViewModel.deleteJob(mJobsResponseList.get(intItem).getJobNumber());
+            }
+            notifyDataSetChanged();
+            mode.finish();
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            multiSelect = false;
+            selectedItems.clear();
+            notifyDataSetChanged();
+        }
+    };
+
+    private void selectItem(Integer item) {
+        if (multiSelect) {
+            final JobsItemViewModel mJobsItemViewModel = mJobsResponseList.get(item);
+            if (selectedItems.contains(item)) {
+                selectedItems.remove(item);
+                mJobsItemViewModel.setWhite();
+            } else {
+                selectedItems.add(item);
+                mJobsItemViewModel.setGrey();
+            }
+        }
     }
 }

@@ -34,6 +34,9 @@ public interface JobDao {
     @Query("SELECT * FROM jobs WHERE uuid IN (:uniqueIds)")
     List<BaseJob> loadAllByIds(List<Integer> uniqueIds);
 
+    @Query("DELETE FROM jobs WHERE jobNumber = :jobNumber")
+    void deleteJob(String jobNumber);
+
     @Query("DELETE FROM jobs")
     void deleteAll();
 

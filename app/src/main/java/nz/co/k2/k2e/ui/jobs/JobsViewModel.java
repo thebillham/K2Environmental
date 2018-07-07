@@ -8,12 +8,15 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Singleton;
+
 import io.reactivex.Observable;
 import nz.co.k2.k2e.data.DataManager;
 import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
 import nz.co.k2.k2e.ui.base.BaseViewModel;
 import nz.co.k2.k2e.utils.rx.SchedulerProvider;
 
+@Singleton
 public class JobsViewModel extends BaseViewModel<JobsNavigator> {
 
     private final ObservableList<JobsItemViewModel> jobsItemViewModels = new ObservableArrayList<>();
@@ -129,6 +132,14 @@ public class JobsViewModel extends BaseViewModel<JobsNavigator> {
                 }, throwable -> {
                     throwable.getStackTrace();
                 }));
+    }
+
+    public void deleteJob(String jobNumber) {
+        getCompositeDisposable().add(getDataManager()
+                .deleteJob(jobNumber)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe());
     }
 
     public ObservableList<JobsItemViewModel> getJobsItemViewModels() {

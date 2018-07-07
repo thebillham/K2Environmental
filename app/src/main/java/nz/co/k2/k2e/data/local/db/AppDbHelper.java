@@ -8,8 +8,10 @@ import java.util.concurrent.Callable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.functions.Action;
 import nz.co.k2.k2e.data.model.db.WfmJob;
 import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
 
@@ -155,6 +157,16 @@ public class AppDbHelper implements DbHelper {
     @Override
     public Single<Boolean> isJobListEmpty() {
         return null;
+    }
+
+    @Override
+    public Completable deleteJob(String jobNumber) {
+        return Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                mAppDatabase.jobDao().deleteJob(jobNumber);
+            }
+        });
     }
 
     //

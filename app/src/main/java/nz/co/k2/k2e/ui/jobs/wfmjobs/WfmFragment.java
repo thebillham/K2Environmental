@@ -14,11 +14,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import nz.co.k2.k2e.BR;
 import nz.co.k2.k2e.R;
+import nz.co.k2.k2e.data.model.db.WfmJob;
 import nz.co.k2.k2e.databinding.FragmentWfmBinding;
 import nz.co.k2.k2e.ui.base.BaseFragment;
 
@@ -77,6 +85,7 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = super.onCreateView(inflater, container, savedInstanceState);
+//        mWfmViewModel.getWfmList(false);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.wfmSwipeRefresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -98,11 +107,32 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
                 if (!nonEmptyList) {
                     // Do Wfm API call to the job number entered
                     Log.d("BenD", "Searching WFM for " + query);
-                    if (mWfmViewModel.getWfmJobByNumber(query)){
-                        if (!mWfmViewModel.success){
-                            Toast.makeText(getActivity(),"Job not found on WorkflowMax", Toast.LENGTH_SHORT).show();
-                        }
-                    }
+                    mWfmViewModel.getDataManager().getWfmApiCall(query)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new SingleObserver<List<WfmJob>>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+                                    getCompositeDisposable().add(d);
+                                }
+
+                                @Override
+                                public void onSuccess(List<WfmJob> wfmJobs) {
+                                    if (wfmJobs.get(0).getStatus().equals("ERROR")) {
+                                        Toast.makeText(getActivity(),"Job not found on WorkflowMax", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Log.d("BenD", "Saving all jobs from specific query");
+                                        mWfmViewModel.getDataManager().saveAllWfmJobs(wfmJobs);
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+                            });
+
+
                     mWfmAdapter.filterJobs(query);
                 }
                 return true;

@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="8dp"
-            app:cardElevation="1dp">
+            app:cardElevation="1dp"
+            app:cardBackgroundColor="@{viewModel.BgColour}">
 
             <LinearLayout
                 android:layout_width="match_parent"

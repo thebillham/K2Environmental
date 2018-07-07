@@ -83,15 +83,17 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = super.onCreateView(inflater, container, savedInstanceState);
         Log.d("BenD","onCreateView");
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.jobsSwipeRefresh);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                Toast.makeText(container.getContext(), "Cannot Refresh", Toast.LENGTH_LONG).show();
+        mJobsViewModel.loadJobsFromDb();
+//        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.jobsSwipeRefresh);
+//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                Toast.makeText(container.getContext(), "Cannot Refresh", Toast.LENGTH_LONG).show();
 //                swipeRefreshLayout.setRefreshing(true);
-//                mJobsViewModel.loadJobsFromApi(swipeRefreshLayout);
-            }
-        });
+//                mJobsViewModel.loadJobsFromDb();
+//                swipeRefreshLayout.setRefreshing(false);
+//            }
+//        });
 //        searchView = (SearchView) view.findViewById(R.id.JobsSearchView);
 //        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 //            @Override

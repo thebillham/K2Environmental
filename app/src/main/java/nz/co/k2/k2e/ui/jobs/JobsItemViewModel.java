@@ -3,6 +3,7 @@ package nz.co.k2.k2e.ui.jobs;
 import android.content.Context;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -19,6 +20,8 @@ public class JobsItemViewModel {
     public final ObservableField<String> type = new ObservableField<>();
 
     public final ObservableInt typeIcon = new ObservableInt(type);
+
+    public final ObservableInt BgColour = new ObservableInt();
 
     public JobsItemViewModel(String jobNumber, String address, String clientName, String type) {
         if (jobNumber == null) { this.jobNumber.set("No job number"); } else { this.jobNumber.set(jobNumber); }
@@ -43,8 +46,22 @@ public class JobsItemViewModel {
 //        Log.d("BenD", type + ": " + String.valueOf(typeIcon.get()));
     }
 
+    public void setWhite(){
+        BgColour.set(Color.WHITE);
+    }
+
+    public void setGrey(){
+        BgColour.set(Color.LTGRAY);
+    }
+
+    public String getJobNumber() {
+        return jobNumber.get();
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public Drawable getIcon(Context context){
         return context.getDrawable(typeIcon.get());
     }
+
+
 }

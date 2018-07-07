@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import dagger.android.support.AndroidSupportInjection;
+import io.reactivex.disposables.CompositeDisposable;
 
 public abstract class BaseFragment<T extends ViewDataBinding, V extends BaseViewModel> extends Fragment {
 
@@ -37,6 +38,7 @@ public abstract class BaseFragment<T extends ViewDataBinding, V extends BaseView
     private View mRootView;
     private T mViewDataBinding;
     private V mViewModel;
+    private CompositeDisposable mCompositeDisposable;
 
     /**
      * Override for set binding variable
@@ -59,6 +61,10 @@ public abstract class BaseFragment<T extends ViewDataBinding, V extends BaseView
      */
     public abstract V getViewModel();
 
+    public CompositeDisposable getCompositeDisposable() {
+        return mCompositeDisposable;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -73,10 +79,9 @@ public abstract class BaseFragment<T extends ViewDataBinding, V extends BaseView
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Log.d("BenD","superOnCreate");
         performDependencyInjection();
-        Log.d("BenD","performDI");
         super.onCreate(savedInstanceState);
         mViewModel = getViewModel();
-        Log.d("BenD","getViewMOdel");
+        this.mCompositeDisposable = new CompositeDisposable();
         setHasOptionsMenu(false);
     }
 
@@ -90,6 +95,7 @@ public abstract class BaseFragment<T extends ViewDataBinding, V extends BaseView
     @Override
     public void onDetach() {
         Log.d("BenD", "onDetach");
+        mCompositeDisposable.dispose();
         mActivity = null;
         super.onDetach();
     }

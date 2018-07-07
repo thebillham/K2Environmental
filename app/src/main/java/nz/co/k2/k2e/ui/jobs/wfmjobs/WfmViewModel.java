@@ -15,6 +15,7 @@ import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.disposables.Disposable;
 import nz.co.k2.k2e.data.DataManager;
 import nz.co.k2.k2e.data.model.db.WfmJob;
 import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
@@ -52,9 +53,10 @@ public class WfmViewModel extends BaseViewModel<WfmNavigator> {
                         Log.d("BenD","Empty wfmList");
                         success = false;
                     } else {
-                        wfmItemsLiveData.setValue(getViewModelList(wfmList));
-                        getDataManager().saveAllWfmJobs(wfmList);
                         success = true;
+                        wfmItemsLiveData.setValue(getViewModelList(wfmList));
+                        Log.d("BenD","Saved all jobs " + wfmList.size());
+//                        getDataManager().saveAllWfmJobs(wfmList);
                     }
                 }));
     }
@@ -69,8 +71,8 @@ public class WfmViewModel extends BaseViewModel<WfmNavigator> {
                         if (wfmJobs.get(0).getStatus().equals("ERROR")) {
                             success = false;
                         } else {
-                            getDataManager().saveAllWfmJobs(wfmJobs);
                             success = true;
+                            getDataManager().saveAllWfmJobs(wfmJobs);
                         }
                     }
                 ));
