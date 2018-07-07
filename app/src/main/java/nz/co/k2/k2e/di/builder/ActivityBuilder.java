@@ -18,6 +18,7 @@ package nz.co.k2.k2e.di.builder;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
+import nz.co.k2.k2e.ui.jobs.jobmain.JobFragmentProvider;
 import nz.co.k2.k2e.ui.jobs.myjobs.JobsFragmentProvider;
 import nz.co.k2.k2e.ui.jobs.wfmjobs.WfmFragmentProvider;
 import nz.co.k2.k2e.ui.navdrawer.NavDrawerActivity;
@@ -29,7 +30,8 @@ public abstract class ActivityBuilder {
     @ContributesAndroidInjector(modules = {
             NavDrawerModule.class,
             WfmFragmentProvider.class,
-            JobsFragmentProvider.class})
+            JobsFragmentProvider.class,
+            JobFragmentProvider.class})
     abstract NavDrawerActivity bindNavDrawerActivity();
 //
 //    @ContributesAndroidInjector(modules = LoginActivityModule.class)

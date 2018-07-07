@@ -24,6 +24,7 @@ import nz.co.k2.k2e.BR;
 import nz.co.k2.k2e.R;
 import nz.co.k2.k2e.databinding.FragmentJobsBinding;
 import nz.co.k2.k2e.ui.base.BaseFragment;
+import nz.co.k2.k2e.ui.jobs.jobmain.JobFragment;
 import nz.co.k2.k2e.ui.jobs.wfmjobs.WfmFragment;
 
 public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewModel>
@@ -83,40 +84,6 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
         View view = super.onCreateView(inflater, container, savedInstanceState);
         Log.d("BenD","onCreateView");
         mJobsViewModel.loadJobsFromDb();
-//        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.jobsSwipeRefresh);
-//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                Toast.makeText(container.getContext(), "Cannot Refresh", Toast.LENGTH_LONG).show();
-//                swipeRefreshLayout.setRefreshing(true);
-//                mJobsViewModel.loadJobsFromDb();
-//                swipeRefreshLayout.setRefreshing(false);
-//            }
-//        });
-//        searchView = (SearchView) view.findViewById(R.id.JobsSearchView);
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                Log.d("BenD","onQtextsubmit" + query);
-//                Boolean nonEmptyList = mJobsAdapter.filterJobs(query);
-//                if (nonEmptyList) {
-//                    return true;
-//                } else {
-//                    // Do Jobs API call to the job number entered
-//                    Snackbar.make(container, "Search WorkflowMax for job Number", Snackbar.LENGTH_SHORT).show();
-//                }
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//
-//                Log.d("BenD","text change: " + newText);
-//                mJobsAdapter.filterJobs(newText);
-//                return true;
-//            }
-//        });
-
         return view;
     }
 
@@ -134,6 +101,20 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
                     .addToBackStack("wfm")
                     .commit();
         });
+    }
+
+    @Override
+    public void onJobClick(String jobNumber) {
+        // Go to selected job's main page
+        Bundle args = new Bundle();
+        args.putString("jobNumber",jobNumber);
+        JobFragment jobFragment = new JobFragment();
+        jobFragment.setArguments(args);
+        JobsFragment.this.getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.flContent, jobFragment)
+                .addToBackStack("jobmain")
+                .commit();
     }
 
     @Override
