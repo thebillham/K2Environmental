@@ -9,8 +9,8 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import nz.co.k2.k2e.ui.jobs.JobsAdapter;
-import nz.co.k2.k2e.ui.jobs.JobsItemViewModel;
+import nz.co.k2.k2e.ui.jobs.myjobs.JobsAdapter;
+import nz.co.k2.k2e.ui.jobs.myjobs.JobsItemViewModel;
 import nz.co.k2.k2e.ui.jobs.wfmjobs.WfmAdapter;
 import nz.co.k2.k2e.ui.jobs.wfmjobs.WfmItemViewModel;
 

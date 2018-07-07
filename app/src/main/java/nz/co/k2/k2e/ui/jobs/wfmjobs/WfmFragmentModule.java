@@ -18,7 +18,7 @@ import nz.co.k2.k2e.utils.rx.SchedulerProvider;
 public class WfmFragmentModule {
 
     @Provides
-    WfmViewModel WfmViewModel(DataManager dataManager, SchedulerProvider schedulerProvider) {
+    WfmViewModel wfmViewModel(DataManager dataManager, SchedulerProvider schedulerProvider) {
         Log.d("BenD","provides viewmodel");
         return new WfmViewModel(dataManager, schedulerProvider);
     }
@@ -39,7 +39,6 @@ public class WfmFragmentModule {
     @Provides
     @Named("WfmFragment")
     ViewModelProvider.Factory providewfmViewModel(WfmViewModel wfmViewModel) {
-        Log.d("BenD","provides viewmodel factory");
         return new ViewModelProviderFactory<>(wfmViewModel);
     }
 }

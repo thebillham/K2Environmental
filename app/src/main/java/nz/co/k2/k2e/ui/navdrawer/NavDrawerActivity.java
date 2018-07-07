@@ -35,7 +35,7 @@ import nz.co.k2.k2e.ui.base.BaseActivity;
 import nz.co.k2.k2e.ui.calendar.CalendarFragment;
 import nz.co.k2.k2e.ui.custom.RoundedImageView;
 import nz.co.k2.k2e.ui.equipment.EquipmentFragment;
-import nz.co.k2.k2e.ui.jobs.JobsFragment;
+import nz.co.k2.k2e.ui.jobs.myjobs.JobsFragment;
 import nz.co.k2.k2e.ui.lab.AsbestosLabFragment;
 import nz.co.k2.k2e.ui.login.GoogleLoginActivity;
 import nz.co.k2.k2e.ui.mydetails.MyDetailsFragment;

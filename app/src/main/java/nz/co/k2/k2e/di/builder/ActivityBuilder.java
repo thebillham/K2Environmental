@@ -18,7 +18,7 @@ package nz.co.k2.k2e.di.builder;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
-import nz.co.k2.k2e.ui.jobs.JobsFragmentProvider;
+import nz.co.k2.k2e.ui.jobs.myjobs.JobsFragmentProvider;
 import nz.co.k2.k2e.ui.jobs.wfmjobs.WfmFragmentProvider;
 import nz.co.k2.k2e.ui.navdrawer.NavDrawerActivity;
 import nz.co.k2.k2e.ui.navdrawer.NavDrawerModule;
