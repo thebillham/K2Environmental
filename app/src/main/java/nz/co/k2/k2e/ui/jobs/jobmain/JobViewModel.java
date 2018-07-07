@@ -1,5 +1,6 @@
 package nz.co.k2.k2e.ui.jobs.jobmain;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableList;
@@ -21,12 +22,13 @@ import nz.co.k2.k2e.utils.rx.SchedulerProvider;
 @Singleton
 public class JobViewModel extends BaseViewModel<JobsNavigator> {
 
-    private final MutableLiveData<BaseJob> jobLiveData;
+    public BaseJob currentJob;
+    public String mJobNumber;
 
     public JobViewModel(DataManager dataManager,
                         SchedulerProvider schedulerProvider) {
         super(dataManager, schedulerProvider);
-        jobLiveData = new MutableLiveData<>();
+        currentJob = new BaseJob();
     }
 
 
@@ -35,17 +37,22 @@ public class JobViewModel extends BaseViewModel<JobsNavigator> {
 
 
     public void loadJobFromDb(String jobNumber) {
+        mJobNumber = jobNumber;
         Log.d("BenD","Job " + jobNumber + " retrieved from database");
         getCompositeDisposable().add(getDataManager()
                 .getJobByJobNumber(jobNumber)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(job -> {
-                    if (job != null) {
-                        jobLiveData.setValue(job);
-                    }
+                        currentJob=job;
+//                        Log.d("BenD",currentJob.getValue().getAddress());
                 }, throwable -> {
                     throwable.getStackTrace();
                 }));
     }
+
+    public BaseJob getCurrentJob(){
+        return currentJob;
+    }
+
 }

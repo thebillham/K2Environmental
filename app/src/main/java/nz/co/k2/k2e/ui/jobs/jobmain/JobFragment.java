@@ -1,21 +1,15 @@
 package nz.co.k2.k2e.ui.jobs.jobmain;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -33,9 +27,9 @@ public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewMod
     @Inject
     @Named("JobLinearLayout")
     LinearLayoutManager mLayoutManager;
-//    @Inject
-//    @Named("JobFragment")
-//    ViewModelProvider.Factory mViewModelFactory;
+    @Inject
+    @Named("JobFragment")
+    ViewModelProvider.Factory mViewModelFactory;
     @Inject
     JobViewModel mJobViewModel;
 
@@ -68,18 +62,16 @@ public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewMod
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d("BenD","onCreate");
         super.onCreate(savedInstanceState);
+        String jobNumber = getArguments().getString("jobNumber", "");
+        Log.d("BenD",mJobViewModel.toString());
+        mJobViewModel.loadJobFromDb(jobNumber);
         mJobViewModel.setNavigator(this);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = super.onCreateView(inflater, container, savedInstanceState);
-//        Bundle args = getArguments();
-        String jobNumber = getArguments().getString("jobNumber", "");
-        Log.d("BenD","onCreateView");
-        mJobViewModel.loadJobFromDb(jobNumber);
         return view;
     }
 

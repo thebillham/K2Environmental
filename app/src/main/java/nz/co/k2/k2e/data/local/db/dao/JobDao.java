@@ -16,7 +16,7 @@ public interface JobDao {
     @Delete
     void delete(BaseJob job);
 
-    @Query("SELECT * FROM jobs WHERE jobNumber LIKE :jobNumber LIMIT 1")
+    @Query("SELECT * FROM jobs WHERE jobNumber = :jobNumber")
     BaseJob findByJobNumber(String jobNumber);
 
     @Query("SELECT * FROM jobs WHERE uuid LIKE :uuid LIMIT 1")

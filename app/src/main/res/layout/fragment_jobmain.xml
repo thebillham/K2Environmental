@@ -17,8 +17,13 @@
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Job Number" />
-            <!--android:text="@{`Job Number: ` + viewModel.getJobNumber()}" />-->
+            android:text="@{`Job Number: ` + viewModel.mJobNumber}" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{`Job Number: ` + viewModel.currentJob.address}" />
 
         <LinearLayout
                 android:layout_width="match_parent"

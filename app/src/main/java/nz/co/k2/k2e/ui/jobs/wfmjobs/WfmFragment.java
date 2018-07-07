@@ -173,7 +173,6 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
     private void setUp() {
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mFragmentWfmBinding.WFMRecycler.setLayoutManager(mLayoutManager);
-        Log.d("BenD","Wfm fragment set up " + mFragmentWfmBinding.WFMRecycler.getLayoutManager().toString());
         mFragmentWfmBinding.WFMRecycler.setItemAnimator(new DefaultItemAnimator());
         mFragmentWfmBinding.WFMRecycler.setAdapter(mWfmAdapter);
     }

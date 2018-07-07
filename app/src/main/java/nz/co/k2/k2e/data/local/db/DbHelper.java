@@ -19,6 +19,7 @@ package nz.co.k2.k2e.data.local.db;
 import java.util.List;
 
 import io.reactivex.Completable;
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import nz.co.k2.k2e.data.model.db.WfmJob;
@@ -38,7 +39,7 @@ public interface DbHelper {
     Observable<List<BaseJob>> getAllJobs();
     Single<Long> saveAllJobs(List<BaseJob> jobs);
     Single<Long> insertJob(BaseJob job);
-    Single<BaseJob> getJobByJobNumber(String jobNumber);
+    Maybe<BaseJob> getJobByJobNumber(String jobNumber);
     Single<BaseJob> getJobByUuid(String uuid);
     Single<Boolean> isJobListEmpty();
     Completable deleteJob(String jobNumber);

@@ -73,7 +73,6 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d("BenD","onCreate");
         super.onCreate(savedInstanceState);
         mJobsViewModel.setNavigator(this);
         mJobsAdapter.setListener(this);
@@ -82,7 +81,6 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        Log.d("BenD","onCreateView");
         mJobsViewModel.loadJobsFromDb();
         return view;
     }
@@ -90,7 +88,6 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
     public void onResume()
     {
         super.onResume();
-        Log.d("BenD","onResume");
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
         fab.setOnClickListener(v -> {
@@ -132,10 +129,8 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
     }
 
     private void setUp() {
-        Log.d("BenD", "setting up...");
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mFragmentJobsBinding.jobsRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        Log.d("BenD","Jobs fragment set up 2 " + mFragmentJobsBinding.jobsRecycler.getLayoutManager().toString());
         mFragmentJobsBinding.jobsRecycler.setItemAnimator(new DefaultItemAnimator());
         mFragmentJobsBinding.jobsRecycler.setAdapter(mJobsAdapter);
 

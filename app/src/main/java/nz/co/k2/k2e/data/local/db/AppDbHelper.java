@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Completable;
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.functions.Action;
@@ -135,8 +136,8 @@ public class AppDbHelper implements DbHelper {
     }
 
     @Override
-    public Single<BaseJob> getJobByJobNumber(String jobNumber) {
-        return Single.fromCallable(new Callable<BaseJob>() {
+    public Maybe<BaseJob> getJobByJobNumber(String jobNumber) {
+        return Maybe.fromCallable(new Callable<BaseJob>() {
             @Override
             public BaseJob call() throws Exception {
                 return mAppDatabase.jobDao().findByJobNumber(jobNumber);
