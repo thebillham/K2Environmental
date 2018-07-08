@@ -124,6 +124,7 @@ public class JobsViewModel extends BaseViewModel<JobsNavigator> {
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(jobsList -> {
                     if (jobsList != null) {
+//                        jobViewModels.addAll(jobsList);
                         jobsItemsLiveData.setValue(getViewModelList(jobsList));
                     }
                 }, throwable -> {

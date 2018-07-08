@@ -19,6 +19,7 @@ import nz.co.k2.k2e.R;
 import nz.co.k2.k2e.databinding.FragmentJobmainBinding;
 import nz.co.k2.k2e.ui.base.BaseFragment;
 import nz.co.k2.k2e.ui.jobs.myjobs.JobsNavigator;
+import nz.co.k2.k2e.ui.jobs.myjobs.JobsViewModel;
 
 public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewModel>
         implements JobsNavigator{
@@ -54,7 +55,7 @@ public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewMod
     public JobViewModel getViewModel() {
         return mJobViewModel;
     }
-
+// TODO: https://medium.com/corebuild-software/android-repository-pattern-using-rx-room-bac6c65d7385
     @Override
     public void handleError(Throwable throwable) {
         // handle error
@@ -63,8 +64,8 @@ public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewMod
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        Integer pos = getArguments().getInt("jobNumber", 0);
         String jobNumber = getArguments().getString("jobNumber", "");
-        Log.d("BenD",mJobViewModel.toString());
         mJobViewModel.loadJobFromDb(jobNumber);
         mJobViewModel.setNavigator(this);
     }
@@ -96,6 +97,13 @@ public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewMod
         super.onViewCreated(view, savedInstanceState);
         Log.d("BenD","onViewCreated");
         mFragmentJobBinding = getViewDataBinding();
+        mFragmentJobBinding.setViewModel(mJobViewModel);
+
+        // Immediate Binding
+        // When a variable or observable changes, the binding will be scheduled to change before
+        // the next frame. There are times, however, when binding must be executed immediately.
+        // To force execution, use the executePendingBindings() method.
+        mFragmentJobBinding.executePendingBindings();
         setUp();
 //        subscribeToLiveData();
     }
@@ -109,8 +117,8 @@ public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewMod
     }
 
 //    private void subscribeToLiveData() {
-//        mJobViewModel.getJobsRepos().observe(this,
-//                new Observer<List<JobsItemViewModel>>() {
+//        mJobViewModel.getCurrentJob().observe(this,
+//                new Observer<mJobViewModel>() {
 //                    @Override
 //                    public void onChanged(@Nullable List<JobsItemViewModel> JobsItemViewModels) {
 //                        mJobViewModel.addJobsItemsToList(JobsItemViewModels);

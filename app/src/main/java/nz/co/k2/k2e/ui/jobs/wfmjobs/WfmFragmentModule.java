@@ -19,20 +19,17 @@ public class WfmFragmentModule {
 
     @Provides
     WfmViewModel wfmViewModel(DataManager dataManager, SchedulerProvider schedulerProvider) {
-        Log.d("BenD","provides viewmodel");
         return new WfmViewModel(dataManager, schedulerProvider);
     }
 
     @Provides
     @Named("WfmLinearLayout")
     LinearLayoutManager provideLinearLayoutManager(WfmFragment fragment) {
-        Log.d("BenD","provides linear layout");
         return new LinearLayoutManager(fragment.getActivity());
     }
 
     @Provides
     WfmAdapter providewfmAdapter(WfmViewModel wfmViewModel) {
-        Log.d("BenD","provides wfmAdapter");
         return new WfmAdapter(new ArrayList<>(), wfmViewModel);
     }
 

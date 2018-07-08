@@ -14,16 +14,39 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/jobNumberText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{`Job Number: ` + viewModel.mJobNumber}" />
+            tools:text="AS180101"
+            android:text="@{viewModel.currentJob.jobNumber}" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/jobTypeText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{`Job Number: ` + viewModel.currentJob.address}" />
+            tools:text="Job Type"
+            android:text="@{`Client Name: ` + viewModel.currentJob.jobType}" />
+
+        <TextView
+            android:id="@+id/clientNameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Jeff Goldblum"
+            android:text="@{viewModel.currentJob.clientName}" />
+
+        <TextView
+            android:id="@+id/addressText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="100 Geronimo Way, Riccarton, Auckland"
+            android:text="@{`Address: ` + viewModel.currentJob.address}" />
+
+        <TextView
+            android:id="@+id/descriptionText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Asbestos testing in 5 units"
+            android:text="@{`Description: ` + viewModel.currentJob.description}" />
 
         <LinearLayout
                 android:layout_width="match_parent"

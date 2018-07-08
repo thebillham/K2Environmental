@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 5,
-    "identityHash": "afff37c567cb82b8cca86f1ff123f8dc",
+    "identityHash": "a1b5a8d0efbf2e65d5ea520235ece2a0",
     "entities": [
       {
         "tableName": "wfm_jobs",
@@ -116,7 +116,7 @@
       },
       {
         "tableName": "jobs",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `jobNumber` TEXT, `address` TEXT, `clientName` TEXT, `jobType` TEXT, `lastModified` TEXT, PRIMARY KEY(`uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `jobNumber` TEXT, `address` TEXT, `clientName` TEXT, `description` TEXT, `jobType` TEXT, `lastModified` TEXT, PRIMARY KEY(`uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -139,6 +139,12 @@
           {
             "fieldPath": "clientName",
             "columnName": "clientName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -167,7 +173,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"afff37c567cb82b8cca86f1ff123f8dc\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"a1b5a8d0efbf2e65d5ea520235ece2a0\")"
     ]
   }
 }

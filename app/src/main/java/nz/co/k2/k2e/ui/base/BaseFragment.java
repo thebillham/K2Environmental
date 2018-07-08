@@ -77,7 +77,6 @@ public abstract class BaseFragment<T extends ViewDataBinding, V extends BaseView
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d("BenD","superOnCreate");
         performDependencyInjection();
         super.onCreate(savedInstanceState);
         mViewModel = getViewModel();
@@ -94,7 +93,6 @@ public abstract class BaseFragment<T extends ViewDataBinding, V extends BaseView
 
     @Override
     public void onDetach() {
-        Log.d("BenD", "onDetach");
         mCompositeDisposable.dispose();
         mActivity = null;
         super.onDetach();

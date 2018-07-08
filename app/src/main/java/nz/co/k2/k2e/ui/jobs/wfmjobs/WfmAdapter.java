@@ -185,6 +185,7 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                             baseJob.setJobNumber(wfmJob.getJobNumber());
                             baseJob.setAddress(wfmJob.getAddress());
                             baseJob.setClientName(wfmJob.getClientName());
+                            baseJob.setDescription(wfmJob.getDescription());
                             baseJob.setJobType(wfmJob.getType());
                             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
                             baseJob.setLastModified(dateFormat.format(new Date()));

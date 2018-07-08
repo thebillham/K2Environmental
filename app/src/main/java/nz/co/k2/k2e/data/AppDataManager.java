@@ -1,6 +1,8 @@
 package nz.co.k2.k2e.data;
 
 import android.content.Context;
+import android.databinding.ObservableArrayList;
+import android.databinding.ObservableList;
 
 import com.google.gson.Gson;
 

@@ -22,6 +22,11 @@ public class BaseJob {
     @Expose
     public String clientName;
 
+
+
+    @Expose
+    public String description;
+
     @Expose
     public String jobType;
 
@@ -74,6 +79,14 @@ public class BaseJob {
 
     public void setJobType(String jobType) {
         this.jobType = jobType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }
