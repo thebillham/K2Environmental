@@ -3,6 +3,7 @@ package nz.co.k2.k2e.ui.jobs.jobmain;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.databinding.ObservableArrayList;
+import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.databinding.ObservableList;
@@ -26,7 +27,6 @@ import nz.co.k2.k2e.utils.rx.SchedulerProvider;
 public class JobViewModel extends BaseViewModel<JobsNavigator> {
 
     public final ObservableField<BaseJob> currentJob = new ObservableField<>();
-
 
     public JobViewModel(DataManager dataManager,
                         SchedulerProvider schedulerProvider) {

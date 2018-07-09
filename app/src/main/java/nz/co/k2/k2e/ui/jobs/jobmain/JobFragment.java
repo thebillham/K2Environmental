@@ -1,7 +1,11 @@
 package nz.co.k2.k2e.ui.jobs.jobmain;
 
 import android.arch.lifecycle.ViewModelProvider;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.media.MediaScannerConnection;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -33,6 +39,9 @@ public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewMod
     ViewModelProvider.Factory mViewModelFactory;
     @Inject
     JobViewModel mJobViewModel;
+
+    // For taking picture
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     public static JobFragment newInstance() {
         Bundle args = new Bundle();
@@ -73,6 +82,18 @@ public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewMod
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = super.onCreateView(inflater, container, savedInstanceState);
+//        view.findViewById(R.id.)
+        ImageButton jobTitlePhotoBtn = (ImageButton) view.findViewById(R.id.jobTitlePhoto);
+        if (getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            jobTitlePhotoBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickJobTitlePhoto();
+                }
+            });
+        } else {
+            jobTitlePhotoBtn.setEnabled(false);
+        }
         return view;
     }
 
@@ -104,34 +125,13 @@ public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewMod
         // the next frame. There are times, however, when binding must be executed immediately.
         // To force execution, use the executePendingBindings() method.
         mFragmentJobBinding.executePendingBindings();
-        setUp();
-//        subscribeToLiveData();
     }
 
-    private void setUp() {
-        Log.d("BenD", "setting up...");
-//        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-//        mFragmentJobBinding.jobsRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        Log.d("BenD","Jobs fragment set up 2 " + mFragmentJobsBinding.jobsRecycler.getLayoutManager().toString());
-//        mFragmentJobsBinding.jobsRecycler.setItemAnimator(new DefaultItemAnimator());
+    private void onClickJobTitlePhoto(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+        Toast.makeText(getActivity(),"Take a photo",Toast.LENGTH_SHORT).show();
     }
-
-//    private void subscribeToLiveData() {
-//        mJobViewModel.getCurrentJob().observe(this,
-//                new Observer<mJobViewModel>() {
-//                    @Override
-//                    public void onChanged(@Nullable List<JobsItemViewModel> JobsItemViewModels) {
-//                        mJobViewModel.addJobsItemsToList(JobsItemViewModels);
-//                    }
-//                });
-//    }
-
-//    private void showAboutFragment() {
-//        getActivity().getSupportFragmentManager()
-//                .beginTransaction()
-//                .disallowAddToBackStack()
-//                .setCustomAnimations(R.anim.slide_left, R.anim.slide_right)
-//                .add(R.id.flContent, WfmFragment.newInstance(), WfmFragment.class.getSimpleName())
-//                .commit();
-//    }
 }
