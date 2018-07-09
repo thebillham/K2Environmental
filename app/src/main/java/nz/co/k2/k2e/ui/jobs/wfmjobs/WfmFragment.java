@@ -85,31 +85,32 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = super.onCreateView(inflater, container, savedInstanceState);
-//        mWfmViewModel.getWfmList(false);
+
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.wfmSwipeRefresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(true);
-                if (mWfmViewModel.getWfmList(true)){
-                    if (!mWfmViewModel.success){
-                        Toast.makeText(getActivity(),"No jobs found on WorkflowMax", Toast.LENGTH_SHORT).show();
-                    }
-                    swipeRefreshLayout.setRefreshing(false);}
+                getWfmJobList(true);
             }
         });
+
         searchView = (SearchView) view.findViewById(R.id.wfmSearchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Boolean nonEmptyList = mWfmAdapter.filterJobs(query);
                 searchView.clearFocus();
+                hideKeyboard();
+
                 if (!nonEmptyList) {
                     // Do Wfm API call to the job number entered
                     Log.d("BenD", "Searching WFM for " + query);
+//                    swipeRefreshLayout.setRefreshing(true);
                     mWfmViewModel.getDataManager().getWfmApiCall(query)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(__ -> swipeRefreshLayout.setRefreshing(true))
+                            .doFinally(() -> swipeRefreshLayout.setRefreshing(false))
                             .subscribe(new SingleObserver<List<WfmJob>>() {
                                 @Override
                                 public void onSubscribe(Disposable d) {
@@ -120,20 +121,21 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
                                 public void onSuccess(List<WfmJob> wfmJobs) {
                                     if (wfmJobs.get(0).getStatus().equals("ERROR")) {
                                         Toast.makeText(getActivity(),"Job not found on WorkflowMax", Toast.LENGTH_SHORT).show();
+                                        mWfmAdapter.filterJobs("");
                                     } else {
                                         Log.d("BenD", "Saving all jobs from specific query");
+                                        mWfmViewModel.addWfmItemsToList(mWfmViewModel.getViewModelList(wfmJobs));
                                         mWfmViewModel.getDataManager().saveAllWfmJobs(wfmJobs);
+                                        mWfmAdapter.addItems(mWfmViewModel.getWfmItemViewModels());
+                                        mWfmAdapter.filterJobs(query);
                                     }
                                 }
 
                                 @Override
                                 public void onError(Throwable e) {
-
+                                    e.printStackTrace();
                                 }
                             });
-
-
-                    mWfmAdapter.filterJobs(query);
                 }
                 return true;
             }
@@ -141,6 +143,7 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
             @Override
             public boolean onQueryTextChange(String newText) {
                 Boolean nonEmptyList = mWfmAdapter.filterJobs(newText);
+                mWfmAdapter.filteredList = nonEmptyList;
                 if (!nonEmptyList) {
                     //
                 }
@@ -148,7 +151,38 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
             }
         });
 
+        getWfmJobList(false);
         return view;
+    }
+
+    public void getWfmJobList(Boolean forceRefresh){
+        mWfmViewModel.getWfmList(forceRefresh)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe(__ -> swipeRefreshLayout.setRefreshing(true))
+            .doFinally(() -> swipeRefreshLayout.setRefreshing(false))
+            .subscribe(new SingleObserver<List<WfmJob>>() {
+                @Override
+                public void onSubscribe(Disposable d) {
+                    getCompositeDisposable().add(d);
+                }
+
+                @Override
+                public void onSuccess(List<WfmJob> wfmJobs) {
+                    if (wfmJobs.isEmpty()) {
+                        Toast.makeText(getActivity(),"No jobs found on WorkflowMax", Toast.LENGTH_SHORT).show();
+                    } else {
+                        mWfmViewModel.addWfmItemsToList(mWfmViewModel.getViewModelList(wfmJobs));
+                        mWfmViewModel.saveAllWfmJobs(wfmJobs);
+                    }
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                }
+            });
+
     }
 
     @Override

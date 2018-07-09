@@ -194,9 +194,11 @@ public class JobsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             for (int pos : selectedItems){
                 mJobsViewModel.deleteJob(mJobsResponseList.get(pos).getJobNumber());
                 mJobsCache.remove(pos);
-                mJobsResponseList.remove(pos);
                 updateItems(mJobsCache);
+                notifyDataSetChanged();
+//                mJobsResponseList.remove(pos);
             }
+//            updateItems(mJobsCache);
             mode.finish();
             return true;
         }

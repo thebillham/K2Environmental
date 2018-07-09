@@ -1,5 +1,6 @@
 package nz.co.k2.k2e.ui.jobs.wfmjobs;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import java.util.UUID;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
@@ -29,11 +31,15 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     public static final int VIEW_TYPE_NORMAL = 1;
 
+    public boolean filteredList = false;
+
     private List<WfmItemViewModel> mWfmResponseList;
 
     private final List<WfmItemViewModel> mWfmCache;
 
     private WfmAdapterListener mListener;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     WfmViewModel mWfmViewModel;
 
@@ -82,17 +88,14 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public void addItems(List<WfmItemViewModel> repoList) {
-        Log.d("BenD", "Additems " + repoList.size());
         mWfmResponseList.clear();
         mWfmResponseList.addAll(repoList);
         mWfmCache.clear();
         mWfmCache.addAll(repoList);
-        Log.d("BenD", "Cache size is " + mWfmCache.size());
         notifyDataSetChanged();
     }
 
     public void updateItems(List<WfmItemViewModel> repoList) {
-        Log.d("BenD", "Update items " + repoList.size());
         mWfmResponseList.clear();
         mWfmResponseList.addAll(repoList);
         notifyDataSetChanged();
@@ -161,6 +164,8 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             // returns to the main job screen
             mWfmViewModel.getDataManager().getWfmApiCall(jobNumber)
                         .subscribeOn(Schedulers.io())
+                        .doOnSubscribe(__ -> mWfmViewModel.setIsLoading(true))
+                        .doFinally(() -> mWfmViewModel.setIsLoading(false))
                         /*
                           Get WFM Response and save to DB
                          */
@@ -196,7 +201,7 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                         .subscribe(new SingleObserver<Long>() {
                             @Override
                             public void onSubscribe(Disposable d) {
-
+                                compositeDisposable.add(d);
                             }
 
                             @Override
@@ -215,12 +220,11 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     public boolean filterJobs(String text){
         if(text.isEmpty()){
-            Log.d("BenD","text is empty, show all jobs");
             updateItems(mWfmCache);
-            Log.d("BenD", "Wfm Cache size is " + mWfmCache.size());
             notifyDataSetChanged();
             return true;
         } else {
+
             ArrayList<WfmItemViewModel> jobList = new ArrayList<>();
             text = text.toLowerCase();
             for(WfmItemViewModel job : mWfmCache){
@@ -231,18 +235,23 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                     jobList.add(job);
                 }
             }
-            Log.d("BenD","list made: " + jobList.size());
             if(jobList.isEmpty()){
-                Log.d("BenD","jobList is empty");
                 clearItems();
                 notifyDataSetChanged();
                 return false;
             } else {
                 updateItems(jobList);
                 notifyDataSetChanged();
+                filteredList = true;
                 return true;
             }
         }
 //        notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        compositeDisposable.dispose();
+        super.onDetachedFromRecyclerView(recyclerView);
     }
 }

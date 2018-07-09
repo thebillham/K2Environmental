@@ -13,9 +13,14 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import nz.co.k2.k2e.data.DataManager;
 import nz.co.k2.k2e.data.model.db.WfmJob;
 import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
@@ -40,42 +45,26 @@ public class WfmViewModel extends BaseViewModel<WfmNavigator> {
     }
 
     public void addWfmItemsToList(List<WfmItemViewModel> wfmItems) {
-        wfmItemViewModels.clear();
-        wfmItemViewModels.addAll(wfmItems);
+        if (wfmItems.size() == 1) {
+            wfmItemViewModels.add(wfmItems.get(0));
+            Log.d("BenD","saved one job");
+        } else {
+            Log.d("BenD","reset all jobs");
+            wfmItemViewModels.clear();
+            wfmItemViewModels.addAll(wfmItems);
+        }
     }
 
-    public Boolean getWfmList(Boolean forceRefresh){
-        return getCompositeDisposable().add(getDataManager().getWfmList(forceRefresh)
-                .observeOn(getSchedulerProvider().ui())
-                .subscribeOn(getSchedulerProvider().io())
-                .subscribe(wfmList -> {
-                    if (wfmList.isEmpty()){
-                        Log.d("BenD","Empty wfmList");
-                        success = false;
-                    } else {
-                        success = true;
-                        wfmItemsLiveData.setValue(getViewModelList(wfmList));
-                        Log.d("BenD","Saved all jobs " + wfmList.size());
-//                        getDataManager().saveAllWfmJobs(wfmList);
-                    }
-                }));
+    public void saveAllWfmJobs(List<WfmJob> wfmJobs){
+        getCompositeDisposable().add(getDataManager().saveAllWfmJobs(wfmJobs)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(id -> Log.d("BenD", "Jobs saved " + id )));
+
     }
 
-    // gets job by number and adds to
-    public Boolean getWfmJobByNumber(String jobNumber) {
-        return getCompositeDisposable()
-                .add(getDataManager().getWfmApiCall(jobNumber)
-                .observeOn(getSchedulerProvider().ui())
-                .subscribeOn(getSchedulerProvider().io())
-                .subscribe(wfmJobs -> {
-                        if (wfmJobs.get(0).getStatus().equals("ERROR")) {
-                            success = false;
-                        } else {
-                            success = true;
-                            getDataManager().saveAllWfmJobs(wfmJobs);
-                        }
-                    }
-                ));
+    public Single<List<WfmJob>> getWfmList(Boolean forceRefresh){
+        return getDataManager().getWfmList(forceRefresh);
     }
 
     public ObservableList<WfmItemViewModel> getWfmItemViewModels() {
