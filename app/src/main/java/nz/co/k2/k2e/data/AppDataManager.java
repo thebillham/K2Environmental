@@ -3,6 +3,7 @@ package nz.co.k2.k2e.data;
 import android.content.Context;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableList;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -128,6 +129,7 @@ public class AppDataManager implements DataManager {
 
     @Override
     public Single<Long> saveAllWfmJobs(List<WfmJob> wfmJobs) {
+        Log.d("BenD", "Saving all WFM jobs from Appdatamanager");
         return mDbHelper.saveAllWfmJobs(wfmJobs);
     }
 

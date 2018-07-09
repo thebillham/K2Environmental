@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,6 +15,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import io.reactivex.Maybe;
+import io.reactivex.MaybeObserver;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -95,7 +99,7 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         notifyDataSetChanged();
     }
 
-    public void updateItems(List<WfmItemViewModel> repoList) {
+    private void updateItems(List<WfmItemViewModel> repoList) {
         mWfmResponseList.clear();
         mWfmResponseList.addAll(repoList);
         notifyDataSetChanged();
@@ -112,13 +116,14 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public interface WfmAdapterListener {
         void onItemClick(String jobNumber);
         void onRetryClick();
+        void onJobLoaded();
     }
 
     public class EmptyViewHolder extends BaseViewHolder implements WfmEmptyItemViewModel.WfmEmptyItemViewModelListener {
 
         private final ItemWfmEmptyViewBinding mBinding;
 
-        public EmptyViewHolder(ItemWfmEmptyViewBinding binding) {
+        private EmptyViewHolder(ItemWfmEmptyViewBinding binding) {
             super(binding.getRoot());
             this.mBinding = binding;
         }
@@ -139,7 +144,7 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         private final ItemWfmViewBinding mBinding;
 
-        public WfmViewHolder(ItemWfmViewBinding binding) {
+        private WfmViewHolder(ItemWfmViewBinding binding) {
             super(binding.getRoot());
             binding.getRoot().setOnClickListener(this);
             this.mBinding = binding;
@@ -160,61 +165,75 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @Override
         public void onClick(View v) {
             String jobNumber = mWfmResponseList.get(getAdapterPosition()).jobNumber.get();
-            // This function takes a jobnumber and converts the WFM Job to a new Base Job, it then
-            // returns to the main job screen
-            mWfmViewModel.getDataManager().getWfmApiCall(jobNumber)
-                        .subscribeOn(Schedulers.io())
-                        .doOnSubscribe(__ -> mWfmViewModel.setIsLoading(true))
-                        .doFinally(() -> mWfmViewModel.setIsLoading(false))
-                        /*
-                          Get WFM Response and save to DB
-                         */
+            // TODO Have changed PHP to return full job data for all Wfm Jobs instead of only getting full data onClick.
+            // Check if Job is already loaded into My Jobs. If it is not loaded, onComplete will be called
+            // Note: this may cause unexpected loadJob functions if onComplete happens more than expected
 
-                        .flatMap(wfmJobs -> {
-                            return mWfmViewModel.getDataManager().saveAllWfmJobs(wfmJobs);
-                        })
-                        /*
-                          Knowing that the WfmJob has been saved to the DB, we can retrieve it and create
-                          a BaseJob from it
-                         */
-                        .flatMap(id -> {
-                            return mWfmViewModel.getDataManager().getWfmJobById(id);
-                        })
-                        /*
-                          Now we have the WFM Job we just need to map it to the BaseJob
-                          and add it to the DB
-                         */
-                        .flatMap(wfmJob -> {
-                            BaseJob baseJob = new BaseJob();
-                            baseJob.setUuid(UUID.randomUUID().toString());
-                            baseJob.setJobNumber(wfmJob.getJobNumber());
-                            baseJob.setAddress(wfmJob.getAddress());
-                            baseJob.setClientName(wfmJob.getClientName());
-                            baseJob.setDescription(wfmJob.getDescription());
-                            baseJob.setJobType(wfmJob.getType());
-                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                            baseJob.setLastModified(dateFormat.format(new Date()));
-                            Log.d("BenD", "Address from rx: " + wfmJob.getAddress());
-                            return mWfmViewModel.getDataManager().insertJob(baseJob);
-                        })
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new SingleObserver<Long>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-                                compositeDisposable.add(d);
-                            }
+            mWfmViewModel.getDataManager().getJobByJobNumber(jobNumber)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new MaybeObserver<BaseJob>() {
 
-                            @Override
-                            public void onSuccess(Long aLong) {
-                                mListener.onItemClick(jobNumber);
-                            }
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                            compositeDisposable.add(d);
+                        }
 
-                            @Override
-                            public void onError(Throwable e) {
+                        @Override
+                        public void onSuccess(BaseJob baseJob) {
+                            mListener.onJobLoaded();
+                        }
 
-                            }
-                        });
-            }
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            loadJob(jobNumber);
+                        }
+                    });
+        }
+    }
+
+
+    public void loadJob(String jobNumber) {
+        // This function takes a jobnumber and converts the WFM Job to a new Base Job, it then
+        // returns to the main job screen
+        Log.d("BenD", "loadJob " + jobNumber);
+        mWfmViewModel.getDataManager().getWfmJobByNumber(jobNumber)
+                .subscribeOn(Schedulers.io())
+                .flatMap(wfmJob -> {
+                    BaseJob baseJob = new BaseJob();
+                    baseJob.setUuid(UUID.randomUUID().toString());
+                    baseJob.setJobNumber(wfmJob.getJobNumber());
+                    baseJob.setAddress(wfmJob.getAddress());
+                    baseJob.setClientName(wfmJob.getClientName());
+                    baseJob.setDescription(wfmJob.getDescription());
+                    baseJob.setJobType(wfmJob.getType());
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                    baseJob.setLastModified(dateFormat.format(new Date()));
+                    Log.d("BenD", "Address from rx: " + wfmJob.getAddress());
+                    return mWfmViewModel.getDataManager().insertJob(baseJob);
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Long>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onSuccess(Long aLong) {
+                        mListener.onItemClick(jobNumber);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 
 
@@ -255,3 +274,60 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         super.onDetachedFromRecyclerView(recyclerView);
     }
 }
+
+//            mWfmViewModel.getDataManager().getJobByJobNumber(jobNumber)
+//                        .subscribeOn(Schedulers.io())
+//                    // TODO setup isLoading
+//                        .doOnSubscribe(__ -> mWfmViewModel.setIsLoading(true))
+//                        .doFinally(() -> mWfmViewModel.setIsLoading(false))
+//                        .filter(id -> id != null)
+//                        /*
+//                          Get WFM Response and save to DB
+//                         */
+//                        .flatMapSingle(job -> mWfmViewModel.getDataManager().getWfmApiCall(jobNumber))
+//                        .flatMap(wfmJobs -> {
+//                            mWfmViewModel.getDataManager().deleteJob(jobNumber);
+//                            return mWfmViewModel.getDataManager().saveAllWfmJobs(wfmJobs);
+//                        })
+//                        /*
+//                          Knowing that the WfmJob has been saved to the DB, we can retrieve it and create
+//                          a BaseJob from it
+//                         */
+//                        .flatMap(id -> {
+//                            return mWfmViewModel.getDataManager().getWfmJobById(id);
+//                        })
+//                        /*
+//                          Now we have the WFM Job we just need to map it to the BaseJob
+//                          and add it to the DB
+//                         */
+//                        .flatMap(wfmJob -> {
+//                            BaseJob baseJob = new BaseJob();
+//                            baseJob.setUuid(UUID.randomUUID().toString());
+//                            baseJob.setJobNumber(wfmJob.getJobNumber());
+//                            baseJob.setAddress(wfmJob.getAddress());
+//                            baseJob.setClientName(wfmJob.getClientName());
+//                            baseJob.setDescription(wfmJob.getDescription());
+//                            baseJob.setJobType(wfmJob.getType());
+//                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+//                            baseJob.setLastModified(dateFormat.format(new Date()));
+//                            Log.d("BenD", "Address from rx: " + wfmJob.getAddress());
+//                            return mWfmViewModel.getDataManager().insertJob(baseJob);
+//                        })
+//                        .observeOn(AndroidSchedulers.mainThread())
+//                        .subscribe(new SingleObserver<Long>() {
+//                            @Override
+//                            public void onSubscribe(Disposable d) {
+//                                compositeDisposable.add(d);
+//                            }
+//
+//                            @Override
+//                            public void onSuccess(Long aLong) {
+//                                mListener.onItemClick(jobNumber);
+//                            }
+//
+//                            @Override
+//                            public void onError(Throwable e) {
+//
+//                            }
+//                        });
+//            }

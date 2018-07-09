@@ -8,70 +8,60 @@
             name="viewModel"
             type="nz.co.k2.k2e.ui.jobs.jobmain.JobViewModel" />
     </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/jobNumberText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="AS180101"
-            android:text="@{viewModel.currentJob.jobNumber}" />
+            android:layout_height="32dp"
+            android:text="@{viewModel.currentJob.jobNumber}"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:text="AS180101" />
 
         <TextView
             android:id="@+id/jobTypeText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="Job Type"
-            android:text="@{`Client Name: ` + viewModel.currentJob.jobType}" />
+            android:layout_height="48dp"
+            android:text="@{viewModel.currentJob.jobType}"
+            android:textStyle="italic"
+            tools:text="Job Type" />
 
         <TextView
             android:id="@+id/clientNameText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Jeff Goldblum"
-            android:text="@{viewModel.currentJob.clientName}" />
+            android:text="@{viewModel.currentJob.clientName}"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:text="Jeff Goldblum" />
 
         <TextView
             android:id="@+id/addressText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="100 Geronimo Way, Riccarton, Auckland"
-            android:text="@{`Address: ` + viewModel.currentJob.address}" />
+            android:text="@{`Address: ` + viewModel.currentJob.address}"
+            tools:text="100 Geronimo Way, Riccarton, Auckland" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="bottom"
+            android:text="Description"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/descriptionText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Asbestos testing in 5 units"
-            android:text="@{`Description: ` + viewModel.currentJob.description}" />
+            android:text="@{`Description: ` + viewModel.currentJob.description}"
+            tools:text="Asbestos testing in 5 units" />
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/linearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="top"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-            </LinearLayout>
     </LinearLayout>
 </layout>

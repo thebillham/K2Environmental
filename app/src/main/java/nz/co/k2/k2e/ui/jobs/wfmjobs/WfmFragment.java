@@ -173,7 +173,7 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
                         Toast.makeText(getActivity(),"No jobs found on WorkflowMax", Toast.LENGTH_SHORT).show();
                     } else {
                         mWfmViewModel.addWfmItemsToList(mWfmViewModel.getViewModelList(wfmJobs));
-                        mWfmViewModel.saveAllWfmJobs(wfmJobs);
+//                        mWfmViewModel.saveAllWfmJobs(wfmJobs);
                     }
                 }
 
@@ -189,6 +189,11 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
     public void onItemClick(String jobNumber) {
         Toast.makeText(getActivity(),jobNumber + " was added to your jobs.", Toast.LENGTH_LONG).show();
         getActivity().getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    @Override
+    public void onJobLoaded(){
+        Toast.makeText(getActivity(), "You have already loaded this job.", Toast.LENGTH_SHORT).show();
     }
 
     @Override

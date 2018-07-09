@@ -33,10 +33,6 @@ public class WfmViewModel extends BaseViewModel<WfmNavigator> {
 
     private final MutableLiveData<List<WfmItemViewModel>> wfmItemsLiveData;
 
-    public Observable<Boolean> forceRefresh;
-
-    public Boolean success;
-
     public WfmViewModel(DataManager dataManager,
                                SchedulerProvider schedulerProvider) {
         super(dataManager, schedulerProvider);

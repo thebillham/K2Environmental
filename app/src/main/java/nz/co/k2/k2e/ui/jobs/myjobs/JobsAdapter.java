@@ -196,6 +196,7 @@ public class JobsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 mJobsCache.remove(pos);
                 updateItems(mJobsCache);
                 notifyDataSetChanged();
+                // TODO stop index out of bounds thing happening
 //                mJobsResponseList.remove(pos);
             }
 //            updateItems(mJobsCache);

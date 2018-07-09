@@ -22,8 +22,6 @@ public class BaseJob {
     @Expose
     public String clientName;
 
-
-
     @Expose
     public String description;
 
