@@ -14,10 +14,13 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Completable;
+import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import nz.co.k2.k2e.data.local.db.DbHelper;
 import nz.co.k2.k2e.data.local.prefs.PreferencesHelper;
 import nz.co.k2.k2e.data.model.db.WfmJob;
@@ -113,6 +116,22 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void apiCreateJob(BaseJob baseJob) {
+        Log.d("BenD", "ApiCreateJob");
+        mApiHelper.apiCreateJob(baseJob);
+    }
+
+    @Override
+    public Single<BaseJob> apiGetJobByUuid(String uuid) {
+        return mApiHelper.apiGetJobByUuid(uuid);
+    }
+
+    @Override
+    public Single<BaseJob> apiGetJobByJobNumber(String jobNumber) {
+        return mApiHelper.apiGetJobByJobNumber(jobNumber);
+    }
+
+    @Override
     public Single<List<WfmJob>> getAllWfmJobs() {
         return mDbHelper.getAllWfmJobs();
     }
@@ -155,6 +174,7 @@ public class AppDataManager implements DataManager {
 
     @Override
     public Single<Long> insertJob(BaseJob job) {
+        Log.d("BenD", "Insert job");
         return mDbHelper.insertJob(job);
     }
 
@@ -186,6 +206,21 @@ public class AppDataManager implements DataManager {
     @Override
     public void setUserEmail(String email) {
         this.userEmail = email;
+    }
+//
+//    @Override
+//    public Flowable pushJob(BaseJob baseJob) {
+//        return Flowable.merge(mDbHelper.insertJob(baseJob), mApiHelper.apiCreateJob(baseJob));
+//    }
+
+    public Single<Long> pushJob(BaseJob baseJob){
+        apiCreateJob(baseJob);
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(result -> Log.d("BenD", String.valueOf(result)));
+        return insertJob(baseJob);
+//        return Single.merge(insertJob(baseJob),
+//                apiCreateJob(baseJob)).singleOrError();
     }
 
     @Override

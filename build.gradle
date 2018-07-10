@@ -57,7 +57,7 @@ ext {
     picassoVersion = '2.5.2'
     rx2FastAndroidNetworking = '1.0.1'
     glideVersion = '3.7.0'
-    firebaseVersion = '16.0.0'
+    firebaseVersion = '16.0.1'
     firebaseAuthVersion = '16.0.1'
     playServicesVersion = '15.0.1'
     debugDBVersion = '1.0.3'

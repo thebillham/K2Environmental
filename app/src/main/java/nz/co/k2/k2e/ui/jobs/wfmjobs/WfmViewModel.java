@@ -81,4 +81,18 @@ public class WfmViewModel extends BaseViewModel<WfmNavigator> {
         }
         return wfmItemViewModels;
     }
+
+    public BaseJob createBaseJob(WfmJob wfmJob) {
+        BaseJob baseJob = new BaseJob();
+        baseJob.setUuid(UUID.randomUUID().toString());
+        baseJob.setJobNumber(wfmJob.getJobNumber());
+        baseJob.setAddress(wfmJob.getAddress());
+        baseJob.setClientName(wfmJob.getClientName());
+        baseJob.setDescription(wfmJob.getDescription());
+        baseJob.setJobType(wfmJob.getType());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        baseJob.setLastModified(dateFormat.format(new Date()));
+        Log.d("BenD", "Address from rx: " + wfmJob.getAddress());
+        return baseJob;
+    }
 }

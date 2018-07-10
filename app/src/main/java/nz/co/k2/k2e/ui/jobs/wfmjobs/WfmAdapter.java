@@ -205,17 +205,7 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         mWfmViewModel.getDataManager().getWfmJobByNumber(jobNumber)
                 .subscribeOn(Schedulers.io())
                 .flatMap(wfmJob -> {
-                    BaseJob baseJob = new BaseJob();
-                    baseJob.setUuid(UUID.randomUUID().toString());
-                    baseJob.setJobNumber(wfmJob.getJobNumber());
-                    baseJob.setAddress(wfmJob.getAddress());
-                    baseJob.setClientName(wfmJob.getClientName());
-                    baseJob.setDescription(wfmJob.getDescription());
-                    baseJob.setJobType(wfmJob.getType());
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                    baseJob.setLastModified(dateFormat.format(new Date()));
-                    Log.d("BenD", "Address from rx: " + wfmJob.getAddress());
-                    return mWfmViewModel.getDataManager().insertJob(baseJob);
+                    return mWfmViewModel.getDataManager().pushJob(mWfmViewModel.createBaseJob(wfmJob));
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<Long>() {

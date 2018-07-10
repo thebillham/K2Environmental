@@ -1,7 +1,12 @@
 package nz.co.k2.k2e.data;
 
+import io.reactivex.Completable;
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import nz.co.k2.k2e.data.local.db.DbHelper;
 import nz.co.k2.k2e.data.local.prefs.PreferencesHelper;
+import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
 import nz.co.k2.k2e.data.remote.ApiHelper;
 import nz.co.k2.k2e.ui.jobs.wfmjobs.WfmHelper;
 
@@ -12,6 +17,8 @@ public interface DataManager extends DbHelper, PreferencesHelper, ApiHelper, Wfm
     public String getUserEmail();
 
     public void setUserEmail(String email);
+
+    public Single<Long> pushJob(BaseJob baseJob);
 //
     void updateUserInfo(
             String userName,
@@ -32,5 +39,6 @@ public interface DataManager extends DbHelper, PreferencesHelper, ApiHelper, Wfm
         public int getType() {
             return mType;
         }
+
     }
 }

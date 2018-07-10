@@ -29,6 +29,7 @@
             <!--android:theme="@style/K2" />-->
         <activity android:name=".ui.navdrawer.NavDrawerActivity"
             android:theme="@style/K2" />
+        <activity android:name=".ui.login.SplashScreen" />
     </application>
 
 </manifest>
