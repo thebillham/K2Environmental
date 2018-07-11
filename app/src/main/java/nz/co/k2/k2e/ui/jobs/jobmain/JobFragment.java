@@ -23,6 +23,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
@@ -120,6 +122,24 @@ public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewMod
             @Override
             public void onClick(View v) {
                 dispatchTakePictureIntent();
+            }
+        });
+
+        AHBottomNavigationItem bnavInfo = new AHBottomNavigationItem("Info",R.drawable.ic_info);
+        AHBottomNavigationItem bnavSamples = new AHBottomNavigationItem("Samples",R.drawable.ic_sample);
+        AHBottomNavigationItem bnavCheck = new AHBottomNavigationItem("Check",R.drawable.ic_check);
+
+        AHBottomNavigation bottomNavigation = getActivity().findViewById(R.id.bottom_navigation);
+
+        bottomNavigation.addItem(bnavInfo);
+        bottomNavigation.addItem(bnavSamples);
+        bottomNavigation.addItem(bnavCheck);
+        bottomNavigation.setCurrentItem(0);
+
+        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
+            @Override
+            public boolean onTabSelected(int position, boolean wasSelected) {
+                return false;
             }
         });
 
