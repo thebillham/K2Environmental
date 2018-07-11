@@ -1,21 +1,37 @@
 package nz.co.k2.k2e.ui.jobs.jobmain;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProvider;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.MediaScannerConnection;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -25,7 +41,8 @@ import nz.co.k2.k2e.R;
 import nz.co.k2.k2e.databinding.FragmentJobmainBinding;
 import nz.co.k2.k2e.ui.base.BaseFragment;
 import nz.co.k2.k2e.ui.jobs.myjobs.JobsNavigator;
-import nz.co.k2.k2e.ui.jobs.myjobs.JobsViewModel;
+
+import nz.co.k2.k2e.ui.navdrawer.NavDrawerActivity;
 
 public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewModel>
         implements JobsNavigator{
@@ -40,8 +57,20 @@ public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewMod
     @Inject
     JobViewModel mJobViewModel;
 
-    // For taking picture
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private FloatingActionMenu menuJobMain;
+
+    private FloatingActionButton fab1;
+    private FloatingActionButton fab2;
+    private FloatingActionButton fab3;
+
+    //https://github.com/rexstjohn/UltimateAndroidCameraGuide/blob/master/camera/src/main/java/com/ultimate/camera/fragments/SimpleCameraIntentFragment.java
+
+    // Activity result key for camera
+    static final int REQUEST_TAKE_PHOTO = 11111;
+
+    // Image view for showing our image.
+    private ImageView mImageView;
+    private ImageView mThumbView;
 
     public static JobFragment newInstance() {
         Bundle args = new Bundle();
@@ -83,34 +112,33 @@ public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewMod
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = super.onCreateView(inflater, container, savedInstanceState);
 //        view.findViewById(R.id.)
-        ImageButton jobTitlePhotoBtn = (ImageButton) view.findViewById(R.id.jobTitlePhoto);
-        if (getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-            jobTitlePhotoBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onClickJobTitlePhoto();
-                }
-            });
-        } else {
-            jobTitlePhotoBtn.setEnabled(false);
-        }
+        mImageView = view.findViewById(R.id.image_title_photo);
+//        mThumbView = view.findViewById(R.id.image_title_thumb);
+        ImageButton jobTitlePhotoBtn = view.findViewById(R.id.btn_title_photo);
+
+        jobTitlePhotoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dispatchTakePictureIntent();
+            }
+        });
+
         return view;
     }
 
+    @Override
     public void onResume()
     {
         super.onResume();
-        Log.d("BenD","onResume");
-        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        FloatingActionMenu fab = getActivity().findViewById(R.id.menu_jobmain);
         fab.setVisibility(View.VISIBLE);
-        fab.setOnClickListener(v -> {
-//            // Go to Add Jobs screen
-//            JobFragment.this.getActivity().getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .replace(R.id.flContent, new WfmFragment())
-//                    .addToBackStack("wfm")
-//                    .commit();
-        });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        FloatingActionMenu fab = getActivity().findViewById(R.id.menu_jobmain);
+        fab.setVisibility(View.GONE);
     }
 
     @Override
@@ -125,13 +153,160 @@ public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewMod
         // the next frame. There are times, however, when binding must be executed immediately.
         // To force execution, use the executePendingBindings() method.
         mFragmentJobBinding.executePendingBindings();
+
+        menuJobMain = view.findViewById(R.id.menu_jobmain);
+
+        fab1 = view.findViewById(R.id.fab1);
+        fab2 = view.findViewById(R.id.fab2);
+        fab3 = view.findViewById(R.id.fab3);
+
+//        final FloatingActionButton programFab1 = new FloatingActionButton(getActivity());
     }
 
-    private void onClickJobTitlePhoto(){
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.fab1:
+                    Toast.makeText(getContext(), "Fab 1" , Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.fab2:
+                    Toast.makeText(getContext(), "Fab 2" , Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.fab3:
+                    Toast.makeText(getContext(), "Fab 3" , Toast.LENGTH_SHORT).show();
+                    break;
+            }
         }
-        Toast.makeText(getActivity(),"Take a photo",Toast.LENGTH_SHORT).show();
+    };
+
+    /**
+     * Start the camera by dispatching a camera intent.
+     */
+    protected void dispatchTakePictureIntent() {
+
+        // Check if there is a camera.
+        Context context = getActivity();
+        PackageManager packageManager = context.getPackageManager();
+        if(!packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)){
+            Toast.makeText(getActivity(), "This device does not have a camera.", Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
+
+        // Camera exists? Then proceed...
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
+            // Create the File where the photo should go.
+            // If you don't do this, you may get a crash in some devices.
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                Toast toast = Toast.makeText(context, "There was a problem saving the photo...", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri fileUri = Uri.fromFile(photoFile);
+                ((NavDrawerActivity)getActivity()).setCapturedImageURI(fileUri);
+                ((NavDrawerActivity)getActivity()).setCurrentPhotoPath(fileUri.getPath());
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        ((NavDrawerActivity)getActivity()).getCapturedImageURI());
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
     }
+
+    /**
+     * The activity returns with the photo.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
+            addPhotoToGallery();
+
+            // Show the full sized image.
+            Log.d("BenD", mImageView.toString());
+            setFullImageFromFilePath(((NavDrawerActivity)getActivity()).getCurrentPhotoPath(), mImageView);
+//            setFullImageFromFilePath(((NavDrawerActivity)getActivity()).getCurrentPhotoPath(), mThumbView);
+        } else {
+            Toast.makeText(getActivity(), "Image Capture Failed", Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
+    /**
+     * Creates the image file to which the image must be saved.
+     * @return
+     * @throws IOException
+     */
+    protected File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        ((NavDrawerActivity)getActivity()).setCurrentPhotoPath("file:" + image.getAbsolutePath());
+        return image;
+    }
+
+    /**
+     * Add the picture to the photo gallery.
+     * Must be called on all camera images or they will
+     * disappear once taken.
+     */
+    protected void addPhotoToGallery() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(((NavDrawerActivity)getActivity()).getCurrentPhotoPath());
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.getActivity().sendBroadcast(mediaScanIntent);
+    }
+
+
+    /**
+     * Scale the photo down and fit it to our image views.
+     *
+     * "Drastically increases performance" to set images using this technique.
+     * Read more:http://developer.android.com/training/camera/photobasics.html
+     */
+    private void setFullImageFromFilePath(String imagePath, ImageView imageView) {
+        // Get the dimensions of the View
+        int targetW = imageView.getWidth();
+        int targetH = imageView.getHeight();
+
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(imagePath, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(imagePath, bmOptions);
+        imageView.setImageBitmap(bitmap);
+    }
+
+    // https://stackoverflow.com/questions/6448856/android-camera-intent-how-to-get-full-sized-photo
 }

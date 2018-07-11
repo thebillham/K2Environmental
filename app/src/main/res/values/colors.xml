@@ -9,5 +9,7 @@
     <color name="k2green">#006d44</color>
     <color name="colorPrimaryLight">#3D9976</color>
     <color name="colorAccentLight">#FF2D00</color>
+    <color name="colorAccentPressed">#d32500</color>
+    <color name="colorAccentRippled">#ffa28e</color>
     <!--Design colors-->
 </resources>

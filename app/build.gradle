@@ -57,6 +57,9 @@ dependencies {
     implementation "com.android.support:support-vector-drawable:$rootProject.supportLibraryVersion"
     implementation "com.android.support:animated-vector-drawable:$rootProject.supportLibraryVersion"
 
+    // FAB
+    implementation 'com.github.clans:fab:1.6.2'
+
     // Architecture components
 
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'

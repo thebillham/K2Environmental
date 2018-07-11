@@ -7,12 +7,12 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +20,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -70,6 +72,12 @@ AppSettingsFragment.OnFragmentInteractionListener {
         return R.layout.activity_nav_drawer;
     }
 
+    // Floating Action Button Menus
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
     @Override
     public NavDrawerViewModel getViewModel() {
         mNavDrawerViewModel = ViewModelProviders.of(this, mViewModelFactory).get(NavDrawerViewModel.class);
@@ -95,7 +103,7 @@ AppSettingsFragment.OnFragmentInteractionListener {
         }
 
         setContentView(R.layout.activity_nav_drawer);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Setup nav drawer header to receive user details
@@ -119,7 +127,7 @@ AppSettingsFragment.OnFragmentInteractionListener {
                 .replace(R.id.flContent, fragment)
                 .commit();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -127,7 +135,7 @@ AppSettingsFragment.OnFragmentInteractionListener {
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -140,7 +148,7 @@ AppSettingsFragment.OnFragmentInteractionListener {
         if (mNavDrawerViewModel.getDataManager().getCurrentUserProfilePicUrl() != null) {
             Log.d("BenD", "set profile pic" + mNavDrawerViewModel.getDataManager().getCurrentUserProfilePicUrl());
             View view = activityNavDrawerBinding.navView.getHeaderView(0);
-            RoundedImageView imageView = (RoundedImageView) view.findViewById(R.id.iv_profile_pic);
+            RoundedImageView imageView = view.findViewById(R.id.iv_profile_pic);
             Glide.with(this)
                     .load(mNavDrawerViewModel.getDataManager().getCurrentUserProfilePicUrl())
 //                    .placeholder(R.drawable.ic_mindorks_logo)
@@ -153,7 +161,7 @@ AppSettingsFragment.OnFragmentInteractionListener {
         Log.d("BenD", "Email: " + mNavDrawerViewModel.getDataManager().getCurrentUserEmail());
         Log.d("BenD", "Name: " + mNavDrawerViewModel.getDataManager().getCurrentUserName());
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         mNavDrawerViewModel.onNavMenuCreated();
@@ -168,7 +176,7 @@ AppSettingsFragment.OnFragmentInteractionListener {
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -246,7 +254,7 @@ AppSettingsFragment.OnFragmentInteractionListener {
             .beginTransaction()
             .replace(R.id.flContent, fragment)
             .commit();
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -271,5 +279,59 @@ AppSettingsFragment.OnFragmentInteractionListener {
         if (mDrawer != null) {
             mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         }
+    }
+
+    /*
+    * CAMERA FUNCTIONS
+     */
+
+    // Storage for camera image URI components
+    private final static String CAPTURED_PHOTO_PATH_KEY = "mCurrentPhotoPath";
+    private final static String CAPTURED_PHOTO_URI_KEY = "mCapturedImageURI";
+
+    // Required for camera operations in order to save the image file on resume.
+    private String mCurrentPhotoPath = null;
+    private Uri mCapturedImageURI = null;
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        if (mCurrentPhotoPath != null) {
+            savedInstanceState.putString(CAPTURED_PHOTO_PATH_KEY, mCurrentPhotoPath);
+        }
+        if (mCapturedImageURI != null) {
+            savedInstanceState.putString(CAPTURED_PHOTO_URI_KEY, mCapturedImageURI.toString());
+        }
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey(CAPTURED_PHOTO_PATH_KEY)) {
+            mCurrentPhotoPath = savedInstanceState.getString(CAPTURED_PHOTO_PATH_KEY);
+        }
+        if (savedInstanceState.containsKey(CAPTURED_PHOTO_URI_KEY)) {
+            mCapturedImageURI = Uri.parse(savedInstanceState.getString(CAPTURED_PHOTO_URI_KEY));
+        }
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    /**
+     * Getters and setters.
+     */
+
+    public String getCurrentPhotoPath() {
+        return mCurrentPhotoPath;
+    }
+
+    public void setCurrentPhotoPath(String mCurrentPhotoPath) {
+        this.mCurrentPhotoPath = mCurrentPhotoPath;
+    }
+
+    public Uri getCapturedImageURI() {
+        return mCapturedImageURI;
+    }
+
+    public void setCapturedImageURI(Uri mCapturedImageURI) {
+        this.mCapturedImageURI = mCapturedImageURI;
     }
 }

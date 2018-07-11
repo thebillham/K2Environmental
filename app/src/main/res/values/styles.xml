@@ -26,6 +26,23 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccentLight</item>
     </style>
+
+    <style name="FabMain">
+        <item name="fab_colorNormal">@color/colorAccentLight</item>
+        <item name="fab_colorPressed">@color/colorAccentPressed</item>
+        <item name="fab_colorRipple">@color/colorAccentRippled</item>
+        <item name="android:layout_gravity">bottom|end</item>
+        <item name="android:padding">@dimen/fab_margin</item>
+    </style>
+
+    <style name="FabBtn">
+        <item name="fab_colorNormal">@color/colorAccentLight</item>
+        <item name="fab_colorPressed">@color/colorAccentPressed</item>
+        <item name="fab_colorRipple">@color/colorAccentRippled</item>
+        <item name="android:layout_gravity">bottom|end</item>
+        <item name="android:layout_margin">@dimen/fab_margin</item>
+    </style>
+
     <!--<style name="AppThemeFullScreen" parent="AppTheme">-->
         <!--<item name="colorPrimary">@color/white</item>-->
         <!--<item name="colorPrimaryDark">@color/white</item>-->

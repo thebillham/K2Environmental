@@ -205,6 +205,7 @@ public class WfmAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         mWfmViewModel.getDataManager().getWfmJobByNumber(jobNumber)
                 .subscribeOn(Schedulers.io())
                 .flatMap(wfmJob -> {
+                    Log.d("BenD", "Got wfm job " + wfmJob.getJobNumber());
                     return mWfmViewModel.getDataManager().pushJob(mWfmViewModel.createBaseJob(wfmJob));
                 })
                 .observeOn(AndroidSchedulers.mainThread())

@@ -34,7 +34,7 @@ public class AppDbHelper implements DbHelper {
     public Single<List<WfmJob>> getAllWfmJobs() {
         return Single.fromCallable(new Callable<List<WfmJob>>() {
             @Override
-            public List<WfmJob> call() throws Exception {
+            public List<WfmJob> call() {
                 return mAppDatabase.wfmJobDao().loadAll();
             }
         });
@@ -44,7 +44,7 @@ public class AppDbHelper implements DbHelper {
     public Single<WfmJob> getWfmJobByNumber(String jobNumber){
         return Single.fromCallable(new Callable<WfmJob>() {
             @Override
-            public WfmJob call() throws Exception {
+            public WfmJob call() {
                 return mAppDatabase.wfmJobDao().findByJobNumber(jobNumber);
             }
         });
@@ -54,7 +54,7 @@ public class AppDbHelper implements DbHelper {
     public Single<WfmJob> getWfmJobById(Long id) {
         return Single.fromCallable(new Callable<WfmJob>() {
             @Override
-            public WfmJob call() throws Exception {
+            public WfmJob call() {
                 return mAppDatabase.wfmJobDao().findById(id);
             }
         });
@@ -63,9 +63,10 @@ public class AppDbHelper implements DbHelper {
     // Insert list into local database
     @Override
     public Single<Long> saveAllWfmJobs(List<WfmJob> wfmJobs) {
+        Log.d("BenD", "appdbhelper");
         return Single.fromCallable(new Callable<Long>() {
             @Override
-            public Long call() throws Exception {
+            public Long call() {
                 Log.d("BenD", "saveAllWfmJobs");
                 //        Long row;
                 if (wfmJobs.size() == 1) {
@@ -88,7 +89,7 @@ public class AppDbHelper implements DbHelper {
     public Single<Boolean> isWfmListEmpty() {
         return Single.fromCallable(new Callable<Boolean>() {
             @Override
-            public Boolean call() throws Exception {
+            public Boolean call() {
                 return mAppDatabase.wfmJobDao().loadAll().isEmpty();
             }
         });
@@ -98,7 +99,7 @@ public class AppDbHelper implements DbHelper {
     public Single<Long> insertWfmJob(WfmJob wfmJob) {
         return Single.fromCallable(new Callable<Long>() {
             @Override
-            public Long call() throws Exception {
+            public Long call() {
                 return mAppDatabase.wfmJobDao().insert(wfmJob);
             }
         });
@@ -108,7 +109,7 @@ public class AppDbHelper implements DbHelper {
     public Observable<List<BaseJob>> getAllJobs() {
         return Observable.fromCallable(new Callable<List<BaseJob>>() {
             @Override
-            public List<BaseJob> call() throws Exception {
+            public List<BaseJob> call() {
                 return mAppDatabase.jobDao().loadAll();
             }
         });    }
@@ -117,7 +118,7 @@ public class AppDbHelper implements DbHelper {
     public Single<Long> saveAllJobs(List<BaseJob> jobs) {
         return Single.fromCallable(new Callable<Long>() {
             @Override
-            public Long call() throws Exception {
+            public Long call() {
                 mAppDatabase.jobDao().deleteAll();
                 Long[] ids = mAppDatabase.jobDao().insertAll(jobs);
                 return ids[0];
@@ -129,7 +130,7 @@ public class AppDbHelper implements DbHelper {
     public Single<Long> insertJob(BaseJob job) {
         return Single.fromCallable(new Callable<Long>() {
             @Override
-            public Long call() throws Exception {
+            public Long call() {
                 return mAppDatabase.jobDao().insert(job);
             }
         });
@@ -139,7 +140,7 @@ public class AppDbHelper implements DbHelper {
     public Maybe<BaseJob> getJobByJobNumber(String jobNumber) {
         return Maybe.fromCallable(new Callable<BaseJob>() {
             @Override
-            public BaseJob call() throws Exception {
+            public BaseJob call() {
                 return mAppDatabase.jobDao().findByJobNumber(jobNumber);
             }
         });
@@ -149,7 +150,7 @@ public class AppDbHelper implements DbHelper {
     public Single<BaseJob> getJobByUuid(String uuid) {
         return Single.fromCallable(new Callable<BaseJob>() {
             @Override
-            public BaseJob call() throws Exception {
+            public BaseJob call() {
                 return mAppDatabase.jobDao().findByUuid(uuid);
             }
         });
@@ -164,7 +165,7 @@ public class AppDbHelper implements DbHelper {
     public Completable deleteJob(String jobNumber) {
         return Completable.fromAction(new Action() {
             @Override
-            public void run() throws Exception {
+            public void run() {
                 mAppDatabase.jobDao().deleteJob(jobNumber);
             }
         });

@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 import java.util.List;
 
@@ -85,6 +87,7 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
         return view;
     }
 
+    @Override
     public void onResume()
     {
         super.onResume();
@@ -98,6 +101,13 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
                     .addToBackStack("wfm")
                     .commit();
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
     }
 
     @Override

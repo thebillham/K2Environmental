@@ -58,7 +58,7 @@
                             android:text="@{viewModel.jobNumber}"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            tools:text="AS1810101" />
+                            tools:text="@string/job_number_placeholder" />
 
                         <TextView
                             android:id="@+id/WFMclientname"
@@ -67,7 +67,7 @@
                             android:gravity="end"
                             android:text="@{viewModel.clientName}"
                             android:textSize="14sp"
-                            tools:text="Housing New Zealand Corporation" />
+                            tools:text="@string/job_clientname_placeholder" />
                     </LinearLayout>
 
                     <TextView
@@ -78,7 +78,7 @@
                         android:text="@{viewModel.address}"
                         android:textSize="14sp"
                         android:textStyle="italic"
-                        tools:text="34 Geronimo Way, Suburbtown, Cityville" />
+                        tools:text="@string/job_address_placeholder" />
 
                 </LinearLayout>
 

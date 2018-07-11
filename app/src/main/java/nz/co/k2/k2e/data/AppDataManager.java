@@ -148,7 +148,6 @@ public class AppDataManager implements DataManager {
 
     @Override
     public Single<Long> saveAllWfmJobs(List<WfmJob> wfmJobs) {
-        Log.d("BenD", "Saving all WFM jobs from Appdatamanager");
         return mDbHelper.saveAllWfmJobs(wfmJobs);
     }
 

@@ -86,7 +86,7 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.wfmSwipeRefresh);
+        swipeRefreshLayout = view.findViewById(R.id.wfmSwipeRefresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -94,7 +94,7 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
             }
         });
 
-        searchView = (SearchView) view.findViewById(R.id.wfmSearchView);
+        searchView = view.findViewById(R.id.wfmSearchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -125,7 +125,7 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
                                     } else {
                                         Log.d("BenD", "Saving all jobs from specific query");
                                         mWfmViewModel.addWfmItemsToList(mWfmViewModel.getViewModelList(wfmJobs));
-                                        mWfmViewModel.getDataManager().saveAllWfmJobs(wfmJobs);
+                                        mWfmViewModel.saveAllWfmJobs(wfmJobs);
                                         mWfmAdapter.addItems(mWfmViewModel.getWfmItemViewModels());
                                         mWfmAdapter.filterJobs(query);
                                     }
@@ -173,7 +173,7 @@ public class WfmFragment extends BaseFragment<FragmentWfmBinding, WfmViewModel>
                         Toast.makeText(getActivity(),"No jobs found on WorkflowMax", Toast.LENGTH_SHORT).show();
                     } else {
                         mWfmViewModel.addWfmItemsToList(mWfmViewModel.getViewModelList(wfmJobs));
-//                        mWfmViewModel.saveAllWfmJobs(wfmJobs);
+                        mWfmViewModel.saveAllWfmJobs(wfmJobs);
                     }
                 }
 

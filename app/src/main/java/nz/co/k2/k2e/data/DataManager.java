@@ -14,11 +14,11 @@ import nz.co.k2.k2e.ui.jobs.wfmjobs.WfmHelper;
 public interface DataManager extends DbHelper, PreferencesHelper, ApiHelper, WfmHelper {
     String userEmail="";
 
-    public String getUserEmail();
+    String getUserEmail();
 
-    public void setUserEmail(String email);
+    void setUserEmail(String email);
 
-    public Single<Long> pushJob(BaseJob baseJob);
+    Single<Long> pushJob(BaseJob baseJob);
 //
     void updateUserInfo(
             String userName,

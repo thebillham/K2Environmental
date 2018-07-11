@@ -59,7 +59,13 @@
 
     <!--empty state-->
     <string name="empty_screen">You have no jobs loaded\nClick the button to add jobs from WorkflowMax</string>
-    <string name="retry">Retry</string>
+    <string name="title_photo">Title Photo</string>
+    <string name="job_description_label">Description</string>
+    <string name="job_description_placeholder">Asbestos testing in 5 units</string>
+    <string name="job_clientname_placeholder">Jeff Goldblum</string>
+    <string name="job_type_placeholder">Job Type</string>
+    <string name="job_number_placeholder">AS180101</string>
+    <string name="job_address_placeholder">100 Geronimo Way, Riccarton, Auckland</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
