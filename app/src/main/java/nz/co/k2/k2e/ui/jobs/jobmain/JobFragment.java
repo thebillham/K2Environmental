@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -125,16 +126,25 @@ public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewMod
             }
         });
 
+//        https://android.jlelse.eu/ultimate-guide-to-bottom-navigation-on-android-75e4efb8105f
         AHBottomNavigationItem bnavInfo = new AHBottomNavigationItem("Info",R.drawable.ic_info);
+        AHBottomNavigationItem bnavTasks = new AHBottomNavigationItem("Tasks",R.drawable.ic_current_tasks);
         AHBottomNavigationItem bnavSamples = new AHBottomNavigationItem("Samples",R.drawable.ic_sample);
         AHBottomNavigationItem bnavCheck = new AHBottomNavigationItem("Check",R.drawable.ic_check);
 
         AHBottomNavigation bottomNavigation = getActivity().findViewById(R.id.bottom_navigation);
 
         bottomNavigation.addItem(bnavInfo);
+        bottomNavigation.addItem(bnavTasks);
         bottomNavigation.addItem(bnavSamples);
         bottomNavigation.addItem(bnavCheck);
-        bottomNavigation.setCurrentItem(0);
+//        bottomNavigation.setCurrentItem(0);
+
+        bottomNavigation.setDefaultBackgroundColor(Color.WHITE);
+        bottomNavigation.setAccentColor(R.color.colorAccentLight);
+        bottomNavigation.setInactiveColor(R.color.gray);
+        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
+        bottomNavigation.setBehaviorTranslationEnabled(true);
 
         bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
