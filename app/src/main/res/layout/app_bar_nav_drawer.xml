@@ -34,7 +34,7 @@
         style="@style/FabBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/fab_ic_plus"
+        android:src="@drawable/fab_ic_plus"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintRight_toRightOf="parent"
         />
@@ -49,6 +49,10 @@
         style="@style/FabMain"
         fab:menu_labels_ellipsize="end"
         fab:menu_labels_singleLine="true"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
         fab:menu_backgroundColor="#ccffffff">
         <!--fab:menu_fab_label="Menu label">-->
 
@@ -56,7 +60,7 @@
             android:id="@+id/fab1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_sample"
+            android:src="@drawable/fab_ic_plus"
             fab:fab_label="New Task"
             fab:fab_size="mini" />
 
@@ -64,7 +68,7 @@
             android:id="@+id/fab2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_check"
+            android:src="@drawable/fab_ic_plus"
             fab:fab_label="New Bulk Sample"
             fab:fab_size="mini" />
 
@@ -72,7 +76,7 @@
             android:id="@+id/fab3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_equipment"
+            android:src="@drawable/fab_ic_plus"
             fab:fab_label="New Air Sample"
             fab:fab_size="mini" />
     </com.github.clans.fab.FloatingActionMenu>
@@ -80,7 +84,7 @@
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_gravity="bottom" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent" />
 </android.support.constraint.ConstraintLayout>
