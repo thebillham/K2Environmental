@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="nz.co.k2.k2e.ui.samples.asbestos.bulk.AsbestosBulkSampleViewModel" />
+    </data>
+    <android.support.constraint.ConstraintLayout android:layout_height="match_parent" android:layout_width="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/jobNumberText"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:text="@{viewModel.currentSample.uuid}"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    tools:text="@string/job_number_placeholder" />
+
+                <TextView
+                    android:id="@+id/taskLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tasks"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </ScrollView>
+    </android.support.constraint.ConstraintLayout>
+</layout>
