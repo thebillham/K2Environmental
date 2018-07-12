@@ -57,27 +57,27 @@
         <!--fab:menu_fab_label="Menu label">-->
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fab1"
+            android:id="@+id/fab_newtask"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/fab_ic_plus"
-            fab:fab_label="New Task"
+            fab:fab_label="@string/fab_new_task"
             fab:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fab2"
+            android:id="@+id/fab_newbulk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/fab_ic_plus"
-            fab:fab_label="New Bulk Sample"
+            fab:fab_label="@string/fab_new_asbestos_bulk"
             fab:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fab3"
+            android:id="@+id/fab_newair"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/fab_ic_plus"
-            fab:fab_label="New Air Sample"
+            fab:fab_label="@string/fab_new_asbestos_air"
             fab:fab_size="mini" />
     </com.github.clans.fab.FloatingActionMenu>
 

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="asbestos_materials">
+        <item>cement board</item>
+        <item>jointing compound</item>
+        <item>textured plaster</item>
+        <item>corrugated cement sheet</item>
+        <item>soil</item>
+        <item>vinyl (no fibrous backing)</item>
+        <item>vinyl with fibrous backing</item>
+        <item>vinyl tiles</item>
+    </string-array>
+</resources>

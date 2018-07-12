@@ -28,20 +28,22 @@ import nz.co.k2.k2e.ui.jobs.wfmjobs.WfmFragmentProvider;
 import nz.co.k2.k2e.ui.navdrawer.NavDrawerActivity;
 import nz.co.k2.k2e.ui.navdrawer.NavDrawerModule;
 import nz.co.k2.k2e.ui.navdrawer.NavDrawerProvider;
+import nz.co.k2.k2e.ui.samples.asbestos.bulk.AsbestosBulkSampleFragmentModule;
+import nz.co.k2.k2e.ui.samples.asbestos.bulk.AsbestosBulkSampleFragmentProvider;
 
 @Module
 public abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = {
             NavDrawerModule.class,
-            NavDrawerProvider.class,
             WfmFragmentProvider.class,
             JobsFragmentProvider.class,
             JobFragmentProvider.class,
             CheckFragmentProvider.class,
             InfoFragmentProvider.class,
             SamplesFragmentProvider.class,
-            TasksFragmentProvider.class
+            TasksFragmentProvider.class,
+            AsbestosBulkSampleFragmentProvider.class
     })
     abstract NavDrawerActivity bindNavDrawerActivity();
 //

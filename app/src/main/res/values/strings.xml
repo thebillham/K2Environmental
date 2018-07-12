@@ -66,6 +66,10 @@
     <string name="job_type_placeholder">Job Type</string>
     <string name="job_number_placeholder">AS180101</string>
     <string name="job_address_placeholder">100 Geronimo Way, Riccarton, Auckland</string>
+    <string name="add_new_sample">Add New Sample</string>
+    <string name="fab_new_task">New Task</string>
+    <string name="fab_new_asbestos_bulk">New Bulk Sample</string>
+    <string name="fab_new_asbestos_air">New Air Sample</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

@@ -7,8 +7,6 @@
             name="viewModel"
             type="nz.co.k2.k2e.ui.samples.asbestos.bulk.AsbestosBulkSampleViewModel" />
     </data>
-    <android.support.constraint.ConstraintLayout android:layout_height="match_parent" android:layout_width="match_parent">
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -19,23 +17,50 @@
                 android:padding="16dp">
 
                 <TextView
-                    android:id="@+id/jobNumberText"
-                    android:layout_width="match_parent"
-                    android:layout_height="32dp"
-                    android:text="@{viewModel.currentSample.uuid}"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    tools:text="@string/job_number_placeholder" />
-
-                <TextView
                     android:id="@+id/taskLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Tasks"
+                    android:layout_marginBottom="32dp"
+                    android:gravity="center"
+                    android:text="@string/add_new_sample"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
+                <TextView
+                    android:id="@+id/sampleUuid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@{viewModel.sampleUuid}"
+                    android:textSize="12sp"
+                    android:textStyle="italic"
+                    tools:text="SAMPLEUUID" />
+
+                <NumberPicker
+                    android:id="@+id/numberPicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center" />
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/location"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Location"
+                        android:inputType="textAutoCorrect" />
+
+                    <AutoCompleteTextView
+                        android:id="@+id/material"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Material" />
+
+                    <!--<android.support.design.widget.TextInputEditText-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:hint="Material"-->
+                        <!--android:inputType="textAutoCorrect" />-->
+
             </LinearLayout>
         </ScrollView>
-    </android.support.constraint.ConstraintLayout>
 </layout>

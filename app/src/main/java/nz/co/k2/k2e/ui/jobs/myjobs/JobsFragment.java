@@ -89,7 +89,7 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
         fab.setVisibility(View.VISIBLE);
         fab.setOnClickListener(v -> {
             // Go to Add Jobs screen
-            JobsFragment.this.getActivity().getSupportFragmentManager()
+            getActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.flContent, new WfmFragment())
                     .addToBackStack("wfm")
@@ -113,7 +113,7 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
         args.putString("jobNumber",jobNumber);
         JobFragment jobFragment = new JobFragment();
         jobFragment.setArguments(args);
-        JobsFragment.this.getActivity().getSupportFragmentManager()
+        getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.flContent, jobFragment)
                 .addToBackStack("jobmain")

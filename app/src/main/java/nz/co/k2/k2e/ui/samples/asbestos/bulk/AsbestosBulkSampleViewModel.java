@@ -15,6 +15,7 @@ import nz.co.k2.k2e.utils.rx.SchedulerProvider;
 public class AsbestosBulkSampleViewModel extends BaseViewModel<JobsNavigator> {
 
     public final ObservableField<AsbestosBulkSample> currentSample = new ObservableField<>();
+    public final ObservableField<String> sampleUuid = new ObservableField<>();
 
     public AsbestosBulkSampleViewModel(DataManager dataManager,
                         SchedulerProvider schedulerProvider) {

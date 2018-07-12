@@ -9,26 +9,25 @@ import dagger.Module;
 import dagger.Provides;
 import nz.co.k2.k2e.ViewModelProviderFactory;
 import nz.co.k2.k2e.data.DataManager;
-import nz.co.k2.k2e.ui.jobs.jobmain.JobViewModel;
 import nz.co.k2.k2e.utils.rx.SchedulerProvider;
 
 @Module
 public class AsbestosBulkSampleFragmentModule {
 
     @Provides
-    JobViewModel jobViewModel(DataManager dataManager, SchedulerProvider schedulerProvider) {
-        return new JobViewModel(dataManager, schedulerProvider);
+    AsbestosBulkSampleViewModel asbestosBulkSampleViewModel(DataManager dataManager, SchedulerProvider schedulerProvider) {
+        return new AsbestosBulkSampleViewModel(dataManager, schedulerProvider);
     }
 
     @Provides
-    @Named("CheckLinearLayout")
+    @Named("AsbestosBulkSampleLinearLayout")
     LinearLayoutManager provideLinearLayoutManager(AsbestosBulkSampleFragment fragment) {
         return new LinearLayoutManager(fragment.getActivity());
     }
 
     @Provides
-    @Named("JobFragment")
-    ViewModelProvider.Factory provideJobViewModel(JobViewModel jobViewModel) {
-        return new ViewModelProviderFactory<>(jobViewModel);
+    @Named("AsbestosBulkSampleFragment")
+    ViewModelProvider.Factory provideAsbestosBulkSampleViewModel(AsbestosBulkSampleViewModel asbestosBulkSampleViewModel) {
+        return new ViewModelProviderFactory<>(asbestosBulkSampleViewModel);
     }
 }
