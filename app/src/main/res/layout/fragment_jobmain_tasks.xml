@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="nz.co.k2.k2e.ui.jobs.jobmain.JobViewModel" />
+    </data>
+    <android.support.constraint.ConstraintLayout android:layout_height="match_parent" android:layout_width="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/jobNumberText"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:text="@{viewModel.currentJob.jobNumber}"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    tools:text="@string/job_number_placeholder" />
+
+                <TextView
+                    android:id="@+id/taskLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tasks"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/descriptionLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="A list of site visits and tasks with their current status. Can be clicked on to go into that task page. E.g. surveys, stage 1, stage 2, bulk sampling etc."
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+        </ScrollView>
+    </android.support.constraint.ConstraintLayout>
+</layout>

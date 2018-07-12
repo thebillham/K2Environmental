@@ -127,13 +127,13 @@ AppSettingsFragment.OnFragmentInteractionListener {
                 .replace(R.id.flContent, fragment)
                 .commit();
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //
-            }
-        });
+//        FloatingActionButton fab = findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //
+//            }
+//        });
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
 

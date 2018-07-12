@@ -32,8 +32,6 @@ import nz.co.k2.k2e.ui.jobs.wfmjobs.WfmFragment;
 public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewModel>
         implements JobsNavigator, JobsAdapter.JobsAdapterListener {
 
-    SwipeRefreshLayout swipeRefreshLayout;
-    SearchView searchView;
     FragmentJobsBinding mFragmentJobsBinding;
     @Inject
     @Named("JobsLinearLayout")
@@ -84,13 +82,6 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = super.onCreateView(inflater, container, savedInstanceState);
         mJobsViewModel.loadJobsFromDb();
-        return view;
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
         fab.setOnClickListener(v -> {
@@ -101,13 +92,15 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
                     .addToBackStack("wfm")
                     .commit();
         });
+        return view;
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onDestroyView()
+    {
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
+        super.onDestroyView();
     }
 
     @Override
@@ -155,14 +148,5 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
                         mJobsViewModel.addJobsItemsToList(JobsItemViewModels);
                     }
                 });
-    }
-
-    private void showAboutFragment() {
-        getActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .disallowAddToBackStack()
-                .setCustomAnimations(R.anim.slide_left, R.anim.slide_right)
-                .add(R.id.flContent, WfmFragment.newInstance(), WfmFragment.class.getSimpleName())
-                .commit();
     }
 }
