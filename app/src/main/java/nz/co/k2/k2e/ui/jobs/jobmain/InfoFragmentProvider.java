@@ -6,6 +6,6 @@ import dagger.android.ContributesAndroidInjector;
 @Module
 public abstract class InfoFragmentProvider {
 
-    @ContributesAndroidInjector(modules = InfoFragmentModule.class)
+    @ContributesAndroidInjector(modules = JobFragmentModule.class)
     abstract InfoFragment provideInfoFragmentFactory();
 }

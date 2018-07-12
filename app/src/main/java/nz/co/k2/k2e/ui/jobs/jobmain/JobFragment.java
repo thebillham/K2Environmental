@@ -1,6 +1,7 @@
 package nz.co.k2.k2e.ui.jobs.jobmain;
 
 import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,14 +28,14 @@ import nz.co.k2.k2e.R;
 import nz.co.k2.k2e.databinding.FragmentJobmainBinding;
 import nz.co.k2.k2e.ui.base.BaseFragment;
 import nz.co.k2.k2e.ui.jobs.myjobs.JobsNavigator;
+import nz.co.k2.k2e.ui.jobs.myjobs.JobsViewModel;
 
-public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewModel>
-        implements JobsNavigator{
+public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewModel>{
 
     FragmentJobmainBinding fragmentJobmainBinding;
-    @Inject
-    @Named("JobLinearLayout")
-    LinearLayoutManager mLayoutManager;
+//    @Inject
+//    @Named("JobLinearLayout")
+//    LinearLayoutManager mLayoutManager;
     @Inject
     @Named("JobFragment")
     ViewModelProvider.Factory mViewModelFactory;
@@ -70,21 +71,16 @@ public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewMod
 
     @Override
     public JobViewModel getViewModel() {
+        mJobViewModel = ViewModelProviders.of(getActivity(), mViewModelFactory).get(JobViewModel.class);
         return mJobViewModel;
     }
 // TODO: https://medium.com/corebuild-software/android-repository-pattern-using-rx-room-bac6c65d7385
-
-    @Override
-    public void handleError(Throwable throwable) {
-        // handle error
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String jobNumber = getArguments().getString("jobNumber", "");
         mJobViewModel.loadJobFromDb(jobNumber);
-        mJobViewModel.setNavigator(this);
     }
 
     @Override
@@ -123,9 +119,7 @@ public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewMod
         fab.setVisibility(View.VISIBLE);
 
         viewPager = view.findViewById(R.id.jobmain_viewpager);
-        Log.d("BenD", "ViewPager: " + viewPager.toString());
-        fragmentPagerAdapter = new JobMainPagerAdapter(getActivity().getSupportFragmentManager());
-        Log.d("BenD", "FragmentPager: " + fragmentPagerAdapter.toString());
+        fragmentPagerAdapter = new JobMainPagerAdapter(this.getChildFragmentManager());
 
         viewPager.setAdapter(fragmentPagerAdapter);
 
@@ -159,13 +153,13 @@ public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewMod
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.fab1:
-                    Toast.makeText(getContext(), "Fab 1" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Fab 1" , Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.fab2:
-                    Toast.makeText(getContext(), "Fab 2" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Fab 2" , Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.fab3:
-                    Toast.makeText(getContext(), "Fab 3" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Fab 3" , Toast.LENGTH_SHORT).show();
                     break;
             }
         }

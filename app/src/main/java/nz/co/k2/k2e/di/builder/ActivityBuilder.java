@@ -27,12 +27,14 @@ import nz.co.k2.k2e.ui.jobs.myjobs.JobsFragmentProvider;
 import nz.co.k2.k2e.ui.jobs.wfmjobs.WfmFragmentProvider;
 import nz.co.k2.k2e.ui.navdrawer.NavDrawerActivity;
 import nz.co.k2.k2e.ui.navdrawer.NavDrawerModule;
+import nz.co.k2.k2e.ui.navdrawer.NavDrawerProvider;
 
 @Module
 public abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = {
             NavDrawerModule.class,
+            NavDrawerProvider.class,
             WfmFragmentProvider.class,
             JobsFragmentProvider.class,
             JobFragmentProvider.class,

@@ -6,6 +6,6 @@ import dagger.android.ContributesAndroidInjector;
 @Module
 public abstract class CheckFragmentProvider {
 
-    @ContributesAndroidInjector(modules = CheckFragmentModule.class)
+    @ContributesAndroidInjector(modules = JobFragmentModule.class)
     abstract CheckFragment provideCheckFragmentFactory();
 }

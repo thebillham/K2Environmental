@@ -2,6 +2,7 @@ package nz.co.k2.k2e.ui.navdrawer;
 
 import android.databinding.ObservableField;
 import android.text.TextUtils;
+import android.util.Log;
 
 import nz.co.k2.k2e.data.DataManager;
 import nz.co.k2.k2e.ui.base.BaseViewModel;
@@ -45,5 +46,6 @@ public class NavDrawerViewModel extends BaseViewModel<NavDrawerNavigator> {
         if (!TextUtils.isEmpty(profilePicUrl)) {
             userProfilePicUrl.set(profilePicUrl);
         }
+        Log.d("BenD", userEmail.get() + userName.get());
     }
 }

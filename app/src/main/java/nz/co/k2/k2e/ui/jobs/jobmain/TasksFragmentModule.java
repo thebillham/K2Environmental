@@ -26,7 +26,7 @@ public class TasksFragmentModule {
     }
 
     @Provides
-    @Named("TasksFragment")
+    @Named("JobFragment")
     ViewModelProvider.Factory provideJobViewModel(JobViewModel jobViewModel) {
         return new ViewModelProviderFactory<>(jobViewModel);
     }

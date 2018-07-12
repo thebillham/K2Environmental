@@ -1,7 +1,10 @@
 package nz.co.k2.k2e.ui.jobs.jobmain;
 
 import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,17 +20,17 @@ import nz.co.k2.k2e.databinding.FragmentJobmainSamplesBinding;
 import nz.co.k2.k2e.ui.base.BaseFragment;
 import nz.co.k2.k2e.ui.base.BaseViewModel;
 
-public class SamplesFragment extends BaseFragment {
+public class SamplesFragment extends BaseFragment<FragmentJobmainSamplesBinding, JobViewModel> {
 
     private String title;
     private int page;
 
     FragmentJobmainSamplesBinding fragmentJobmainSamplesBinding;
+//    @Inject
+//    @Named("SamplesLinearLayout")
+//    LinearLayoutManager mLayoutManager;
     @Inject
-    @Named("SamplesLinearLayout")
-    LinearLayoutManager mLayoutManager;
-    @Inject
-    @Named("SamplesFragment")
+    @Named("JobFragment")
     ViewModelProvider.Factory mViewModelFactory;
     @Inject
     JobViewModel mJobViewModel;
@@ -43,7 +46,8 @@ public class SamplesFragment extends BaseFragment {
     }
 
     @Override
-    public BaseViewModel getViewModel() {
+    public JobViewModel getViewModel() {
+        mJobViewModel = ViewModelProviders.of(getActivity(), mViewModelFactory).get(JobViewModel.class);
         return mJobViewModel;
     }
 
@@ -73,5 +77,11 @@ public class SamplesFragment extends BaseFragment {
 //        TextView tvLabel = (TextView) view.findViewById(R.id.tvLabel);
 //        tvLabel.setText(page + " -- " + title);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        fragmentJobmainSamplesBinding = getViewDataBinding();
     }
 }

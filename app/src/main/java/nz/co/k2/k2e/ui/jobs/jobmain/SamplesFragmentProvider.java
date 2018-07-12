@@ -6,6 +6,6 @@ import dagger.android.ContributesAndroidInjector;
 @Module
 public abstract class SamplesFragmentProvider {
 
-    @ContributesAndroidInjector(modules = SamplesFragmentModule.class)
+    @ContributesAndroidInjector(modules = JobFragmentModule.class)
     abstract SamplesFragment provideSamplesFragmentFactory();
 }

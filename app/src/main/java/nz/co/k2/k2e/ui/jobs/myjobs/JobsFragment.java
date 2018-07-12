@@ -2,6 +2,7 @@ package nz.co.k2.k2e.ui.jobs.myjobs;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,6 +29,7 @@ import nz.co.k2.k2e.databinding.FragmentJobsBinding;
 import nz.co.k2.k2e.ui.base.BaseFragment;
 import nz.co.k2.k2e.ui.jobs.jobmain.JobFragment;
 import nz.co.k2.k2e.ui.jobs.wfmjobs.WfmFragment;
+import nz.co.k2.k2e.ui.navdrawer.NavDrawerViewModel;
 
 public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewModel>
         implements JobsNavigator, JobsAdapter.JobsAdapterListener {
@@ -63,6 +65,7 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
 
     @Override
     public JobsViewModel getViewModel() {
+        mJobsViewModel = ViewModelProviders.of(this, mViewModelFactory).get(JobsViewModel.class);
         return mJobsViewModel;
     }
 
@@ -125,7 +128,6 @@ public class JobsFragment extends BaseFragment<FragmentJobsBinding, JobsViewMode
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("BenD","onViewCreated");
         mFragmentJobsBinding = getViewDataBinding();
         setUp();
         subscribeToLiveData();

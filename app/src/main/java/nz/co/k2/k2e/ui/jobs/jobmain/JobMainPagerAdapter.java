@@ -33,4 +33,20 @@ public class JobMainPagerAdapter extends FragmentPagerAdapter {
                 return null;
         }
     }
+
+    @Override
+    public CharSequence getPageTitle(int position){
+        switch (position) {
+            case 0: // General Info
+                return "General";
+            case 1: // Tasks
+                return "Tasks";
+            case 2: // Samples
+                return "Samples";
+            case 3: // Check
+                return "Check";
+            default:
+                return null;
+        }
+    }
 }

@@ -26,7 +26,7 @@ public class InfoFragmentModule {
     }
 
     @Provides
-    @Named("InfoFragment")
+    @Named("JobFragment")
     ViewModelProvider.Factory provideJobViewModel(JobViewModel jobViewModel) {
         return new ViewModelProviderFactory<>(jobViewModel);
     }

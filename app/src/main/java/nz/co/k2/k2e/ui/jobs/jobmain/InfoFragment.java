@@ -2,6 +2,7 @@ package nz.co.k2.k2e.ui.jobs.jobmain;
 
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,14 +38,14 @@ import nz.co.k2.k2e.ui.base.BaseFragment;
 import nz.co.k2.k2e.ui.base.BaseViewModel;
 import nz.co.k2.k2e.ui.navdrawer.NavDrawerActivity;
 
-public class InfoFragment extends BaseFragment {
+public class InfoFragment extends BaseFragment<FragmentJobmainInfoBinding, JobViewModel> {
 
     FragmentJobmainInfoBinding fragmentJobmainInfoBinding;
+//    @Inject
+//    @Named("InfoLinearLayout")
+//    LinearLayoutManager mLayoutManager;
     @Inject
-    @Named("InfoLinearLayout")
-    LinearLayoutManager mLayoutManager;
-    @Inject
-    @Named("InfoFragment")
+    @Named("JobFragment")
     ViewModelProvider.Factory mViewModelFactory;
     @Inject
     JobViewModel mJobViewModel;
@@ -68,7 +70,8 @@ public class InfoFragment extends BaseFragment {
     }
 
     @Override
-    public BaseViewModel getViewModel() {
+    public JobViewModel getViewModel() {
+        mJobViewModel = ViewModelProviders.of(getActivity(), mViewModelFactory).get(JobViewModel.class);
         return mJobViewModel;
     }
 
@@ -235,5 +238,10 @@ public class InfoFragment extends BaseFragment {
         imageView.setImageBitmap(bitmap);
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        fragmentJobmainInfoBinding = getViewDataBinding();
+    }
     // https://stackoverflow.com/questions/6448856/android-camera-intent-how-to-get-full-sized-photo
 }

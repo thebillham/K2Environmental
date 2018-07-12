@@ -145,18 +145,18 @@ AppSettingsFragment.OnFragmentInteractionListener {
 
 // Todo get profile image and name etc. to work
         // Set profile image
-        if (mNavDrawerViewModel.getDataManager().getCurrentUserProfilePicUrl() != null) {
-            Log.d("BenD", "set profile pic" + mNavDrawerViewModel.getDataManager().getCurrentUserProfilePicUrl());
-            View view = activityNavDrawerBinding.navView.getHeaderView(0);
-            RoundedImageView imageView = view.findViewById(R.id.iv_profile_pic);
-            Glide.with(this)
-                    .load(mNavDrawerViewModel.getDataManager().getCurrentUserProfilePicUrl())
-//                    .placeholder(R.drawable.ic_mindorks_logo)
-//                    .error(R.drawable.common_google_signin_btn_icon_dark)
-                    .into(imageView);
-        } else {
-            Log.d("BenD", "current user profile pic is null");
-        }
+//        if (mNavDrawerViewModel.getDataManager().getCurrentUserProfilePicUrl() != null) {
+//            Log.d("BenD", "set profile pic" + mNavDrawerViewModel.getDataManager().getCurrentUserProfilePicUrl());
+//            View view = activityNavDrawerBinding.navView.getHeaderView(0);
+//            RoundedImageView imageView = view.findViewById(R.id.iv_profile_pic);
+//            Glide.with(this)
+//                    .load(mNavDrawerViewModel.getDataManager().getCurrentUserProfilePicUrl())
+////                    .placeholder(R.drawable.ic_mindorks_logo)
+////                    .error(R.drawable.common_google_signin_btn_icon_dark)
+//                    .into(imageView);
+//        } else {
+//            Log.d("BenD", "current user profile pic is null");
+//        }
 
         Log.d("BenD", "Email: " + mNavDrawerViewModel.getDataManager().getCurrentUserEmail());
         Log.d("BenD", "Name: " + mNavDrawerViewModel.getDataManager().getCurrentUserName());

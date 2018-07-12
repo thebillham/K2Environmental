@@ -26,7 +26,7 @@ public class CheckFragmentModule {
     }
 
     @Provides
-    @Named("CheckFragment")
+    @Named("JobFragment")
     ViewModelProvider.Factory provideJobViewModel(JobViewModel jobViewModel) {
         return new ViewModelProviderFactory<>(jobViewModel);
     }

@@ -1,7 +1,10 @@
 package nz.co.k2.k2e.ui.jobs.jobmain;
 
 import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,21 +15,19 @@ import javax.inject.Named;
 
 import nz.co.k2.k2e.BR;
 import nz.co.k2.k2e.R;
+import nz.co.k2.k2e.databinding.FragmentJobmainBinding;
 import nz.co.k2.k2e.databinding.FragmentJobmainCheckBinding;
 import nz.co.k2.k2e.ui.base.BaseFragment;
 import nz.co.k2.k2e.ui.base.BaseViewModel;
 
-public class CheckFragment extends BaseFragment {
+public class CheckFragment extends BaseFragment<FragmentJobmainCheckBinding, JobViewModel> {
 
     private String title;
     private int page;
 
     FragmentJobmainCheckBinding fragmentJobmainCheckBinding;
     @Inject
-    @Named("CheckLinearLayout")
-    LinearLayoutManager mLayoutManager;
-    @Inject
-    @Named("CheckFragment")
+    @Named("JobFragment")
     ViewModelProvider.Factory mViewModelFactory;
     @Inject
     JobViewModel mJobViewModel;
@@ -42,7 +43,8 @@ public class CheckFragment extends BaseFragment {
     }
 
     @Override
-    public BaseViewModel getViewModel() {
+    public JobViewModel getViewModel() {
+        mJobViewModel = ViewModelProviders.of(getActivity(), mViewModelFactory).get(JobViewModel.class);
         return mJobViewModel;
     }
 
@@ -73,5 +75,11 @@ public class CheckFragment extends BaseFragment {
 //        TextView tvLabel = (TextView) view.findViewById(R.id.tvLabel);
 //        tvLabel.setText(page + " -- " + title);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        fragmentJobmainCheckBinding = getViewDataBinding();
     }
 }
