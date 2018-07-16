@@ -36,8 +36,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/fab_ic_plus"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/menu_jobmain"

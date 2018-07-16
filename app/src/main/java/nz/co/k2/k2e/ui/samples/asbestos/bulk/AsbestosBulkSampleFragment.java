@@ -1,15 +1,23 @@
 package nz.co.k2.k2e.ui.samples.asbestos.bulk;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
@@ -20,7 +28,9 @@ import nz.co.k2.k2e.BR;
 import nz.co.k2.k2e.R;
 import nz.co.k2.k2e.databinding.FragmentSampleAsbestosBulkBinding;
 import nz.co.k2.k2e.ui.base.BaseFragment;
-import nz.co.k2.k2e.ui.jobs.jobmain.JobViewModel;
+import nz.co.k2.k2e.ui.navdrawer.NavDrawerActivity;
+import nz.co.k2.k2e.utils.CameraUtils;
+import nz.co.k2.k2e.utils.ImageUtils;
 
 public class AsbestosBulkSampleFragment extends BaseFragment<FragmentSampleAsbestosBulkBinding, AsbestosBulkSampleViewModel> {
     FragmentSampleAsbestosBulkBinding fragmentSampleAsbestosBulkBinding;
@@ -46,19 +56,7 @@ public class AsbestosBulkSampleFragment extends BaseFragment<FragmentSampleAsbes
         return asbestosBulkSampleViewModel;
     }
 
-    NumberPicker numberPicker;
-//    String[] asbestosMaterials = getResources().getStringArray(R.array.asbestos_materials);
-
-//
-//    // newInstance constructor for creating fragment with arguments
-//    public static AsbestosBulkSampleFragment newInstance(int page, String title) {
-//        AsbestosBulkSampleFragment asbestosBulkSampleFragment = new AsbestosBulkSampleFragment();
-//        Bundle args = new Bundle();
-//        args.putInt("someInt", page);
-//        args.putString("someTitle", title);
-//        asbestosBulkSampleFragment.setArguments(args);
-//        return asbestosBulkSampleFragment;
-//    }
+    ImageView mImageView;
 
     // Store instance variables based on arguments passed
     @Override
@@ -74,13 +72,22 @@ public class AsbestosBulkSampleFragment extends BaseFragment<FragmentSampleAsbes
                              Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        numberPicker = view.findViewById(R.id.numberPicker);
-        numberPicker.setMinValue(1);
+        mImageView = view.findViewById(R.id.image_title_photo);
+//        mThumbView = view.findViewById(R.id.image_title_thumb);
+        ImageButton jobTitlePhotoBtn = view.findViewById(R.id.btn_title_photo);
 
-        numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        jobTitlePhotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                Toast.makeText(getActivity(),"Number is now " + numberPicker.getValue(), Toast.LENGTH_SHORT).show();
+            public void onClick(View v) {
+                startActivityForResult(CameraUtils.getPickImageIntent(getActivity()), PICK_IMAGE_ID);
+            }
+        });
+
+        Button submitButton = view.findViewById(R.id.sampleSubmitButton);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(),"Sample Added", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -98,5 +105,20 @@ public class AsbestosBulkSampleFragment extends BaseFragment<FragmentSampleAsbes
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fragmentSampleAsbestosBulkBinding = getViewDataBinding();
+    }
+
+    // Activity result key for camera
+    private static final int PICK_IMAGE_ID = 1111;
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        switch(requestCode){
+            case PICK_IMAGE_ID:
+                Bitmap bitmap = CameraUtils.getImageFromResult(getActivity(), resultCode, data);
+                mImageView.setImageBitmap(bitmap);
+                break;
+            default:
+                super.onActivityResult(requestCode,resultCode,data);
+                break;
+        }
     }
 }

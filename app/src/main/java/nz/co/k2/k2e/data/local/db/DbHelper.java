@@ -43,5 +43,6 @@ public interface DbHelper {
     Single<BaseJob> getJobByUuid(String uuid);
     Single<Boolean> isJobListEmpty();
     Completable deleteJob(String jobNumber);
+    Single<Integer> updateJob(BaseJob baseJob);
 
 }

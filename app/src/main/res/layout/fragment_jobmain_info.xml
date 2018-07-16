@@ -19,37 +19,12 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <TextView
-                        android:id="@+id/jobNumberText"
-                        android:layout_width="match_parent"
-                        android:layout_height="32dp"
-                        android:text="@{viewModel.currentJob.jobNumber}"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        tools:text="@string/job_number_placeholder" />
 
-                    <TextView
-                        android:id="@+id/jobTypeText"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:text="@{viewModel.currentJob.jobType}"
-                        android:textStyle="italic"
-                        tools:text="@string/job_type_placeholder" />
-
-                    <TextView
-                        android:id="@+id/clientNameText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@{viewModel.currentJob.clientName}"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        tools:text="@string/job_clientname_placeholder" />
-
-                    <TextView
+                    <EditText
                         android:id="@+id/addressText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{`Address: ` + viewModel.currentJob.address}"
+                        android:text="@={viewModel.currentJob.address}"
                         tools:text="@string/job_address_placeholder" />
 
                     <TextView
@@ -60,11 +35,11 @@
                         android:text="@string/job_description_label"
                         android:textStyle="bold" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/descriptionText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{`Description: ` + viewModel.currentJob.description}"
+                        android:text="@={viewModel.currentJob.description}"
                         tools:text="@string/job_description_placeholder" />
 
                     <TextView
@@ -82,22 +57,34 @@
                     <!--android:layout_gravity="center_horizontal"-->
                     <!--android:background="@color/black_effective" />-->
 
-                    <ImageView
-                        android:id="@+id/image_title_photo"
-                        android:layout_width="240dp"
-                        android:layout_height="152dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_gravity="center_horizontal"
-                        android:background="@color/black_effective" />
 
-                    <ImageButton
-                        android:id="@+id/btn_title_photo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="16dp"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/photo_short_dimen">
 
-                        app:srcCompat="@drawable/ic_camera_alt_black_24dp" />
+                        <ImageView
+                            android:id="@+id/image_title_photo"
+                            android:layout_width="@dimen/photo_long_dimen"
+                            android:layout_height="@dimen/photo_short_dimen"
+                            android:layout_centerHorizontal="true"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="16dp"
+                            android:background="@color/black_effective" />
+
+                        <ImageButton
+                            android:id="@+id/btn_title_photo"
+                            android:layout_width="@dimen/photo_long_dimen"
+                            android:layout_height="@dimen/photo_short_dimen"
+                            android:layout_alignParentBottom="false"
+                            android:layout_alignParentLeft="false"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="16dp"
+                            android:background="#00000000"
+                            android:foregroundGravity="center_horizontal"
+                            app:srcCompat="@drawable/ic_camera2" />
+
+                    </RelativeLayout>
+
                 </LinearLayout>
             </ScrollView>
         </android.support.constraint.ConstraintLayout>

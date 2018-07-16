@@ -171,6 +171,16 @@ public class AppDbHelper implements DbHelper {
         });
     }
 
+    @Override
+    public Single<Integer> updateJob(BaseJob baseJob) {
+        return Single.fromCallable(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                return mAppDatabase.jobDao().update(baseJob);
+            }
+        });
+    }
+
     //
     // JOBS
     //

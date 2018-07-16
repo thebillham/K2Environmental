@@ -19,6 +19,8 @@ import com.github.clans.fab.FloatingActionMenu;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import nz.co.k2.k2e.BR;
 import nz.co.k2.k2e.R;
 import nz.co.k2.k2e.databinding.FragmentJobmainBinding;
@@ -154,6 +156,20 @@ public class JobFragment extends BaseFragment<FragmentJobmainBinding, JobViewMod
         viewPager.setAdapter(fragmentPagerAdapter);
 
         return view;
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        Log.d("BenD", "Try upload edited job to API");
+        getCompositeDisposable().add(mJobViewModel.getDataManager().pushJob(mJobViewModel.currentJob.get())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(insertRow -> {
+                    Log.d("BenD", insertRow.toString());
+                }, throwable -> {
+                    throwable.getStackTrace();
+                }));
     }
 
     @Override

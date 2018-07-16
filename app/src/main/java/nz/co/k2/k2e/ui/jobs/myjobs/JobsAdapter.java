@@ -13,11 +13,9 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import nz.co.k2.k2e.R;
 import nz.co.k2.k2e.databinding.ItemJobsEmptyViewBinding;
 import nz.co.k2.k2e.databinding.ItemJobsViewBinding;
 import nz.co.k2.k2e.ui.base.BaseViewHolder;
-import nz.co.k2.k2e.ui.jobs.wfmjobs.WfmFragment;
 
 public class JobsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public static final int VIEW_TYPE_EMPTY = 0;

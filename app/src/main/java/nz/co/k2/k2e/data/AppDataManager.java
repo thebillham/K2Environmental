@@ -198,6 +198,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Single<Integer> updateJob(BaseJob baseJob) {
+        return mDbHelper.updateJob(baseJob);
+    }
+
+    @Override
     public String getUserEmail() {
         return userEmail;
     }

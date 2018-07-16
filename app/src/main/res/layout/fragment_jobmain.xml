@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -10,8 +11,49 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/clientNameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="@{viewModel.currentJob.clientName}"
+            android:textAlignment="center"
+            android:textColor="@color/colorAccentLight"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="@string/job_clientname_placeholder" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/jobNumberText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="@{viewModel.currentJob.jobNumber}"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="@string/job_number_placeholder" />
+
+
+            <TextView
+                android:id="@+id/jobTypeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="@{viewModel.currentJob.jobType}"
+                android:textSize="16sp"
+                android:textStyle="italic"
+                tools:text="@string/job_type_placeholder" />
+
+        </LinearLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/jobmain_viewpager"

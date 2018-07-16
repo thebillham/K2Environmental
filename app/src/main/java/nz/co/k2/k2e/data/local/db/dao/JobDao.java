@@ -5,6 +5,7 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
 
@@ -21,6 +22,9 @@ public interface JobDao {
 
     @Query("SELECT * FROM jobs WHERE uuid LIKE :uuid LIMIT 1")
     BaseJob findByUuid(String uuid);
+
+    @Update(onConflict = OnConflictStrategy.IGNORE)
+    int update(BaseJob baseJob);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long insert(BaseJob job);

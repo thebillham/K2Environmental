@@ -134,6 +134,7 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
 
+    implementation 'com.android.support:gridlayout-v7:27.1.1'
 }
 
 configurations.all {

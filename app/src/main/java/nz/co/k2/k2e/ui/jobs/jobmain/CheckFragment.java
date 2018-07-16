@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.view.ViewGroup;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import nz.co.k2.k2e.BR;
 import nz.co.k2.k2e.R;
 import nz.co.k2.k2e.databinding.FragmentJobmainBinding;
@@ -48,6 +51,18 @@ public class CheckFragment extends BaseFragment<FragmentJobmainCheckBinding, Job
         return mJobViewModel;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        getCompositeDisposable().add(mJobViewModel.getDataManager().updateJob(mJobViewModel.currentJob.get())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(insertRow -> {
+                    Log.d("BenD", insertRow.toString());
+                }, throwable -> {
+                    throwable.getStackTrace();
+                }));
+    }
 
     // newInstance constructor for creating fragment with arguments
     public static CheckFragment newInstance(int page, String title) {
