@@ -12,13 +12,20 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import nz.co.k2.k2e.R;
@@ -77,27 +84,60 @@ public class CameraUtils {
                                             Intent imageReturnedIntent) {
         Log.d(TAG, "getImageFromResult, resultCode: " + resultCode);
         Bitmap bm = null;
-        File imageFile = getTempFile(context);
+        File imageFile = null;
+        try {
+            imageFile = createImageFile(context);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "Image file is " + imageFile.getAbsolutePath());
+
         if (resultCode == Activity.RESULT_OK) {
             Uri selectedImage;
             boolean isCamera = (imageReturnedIntent == null ||
                     imageReturnedIntent.getData() == null  ||
                     imageReturnedIntent.getData().toString().contains(imageFile.toString()));
             if (isCamera) {     /** CAMERA **/
-                selectedImage = Uri.fromFile(imageFile);
-                addImageToGallery(imageFile.getPath(), context);
+                selectedImage = FileProvider.getUriForFile(context, "nz.co.k2.fileprovider", imageFile);
+//                selectedImage = Uri.fromFile(imageFile);
+                galleryAddPic(imageFile.getAbsolutePath(), context);
             } else {            /** ALBUM **/
                 selectedImage = imageReturnedIntent.getData();
             }
             Log.d(TAG, "selectedImage: " + selectedImage);
 
             bm = getImageResized(context, selectedImage);
-            int rotation = getRotation(context, selectedImage, isCamera);
-            bm = rotate(bm, rotation);
+//            int rotation = getRotation(context, selectedImage, isCamera);
+//            bm = rotate(bm, rotation);
         }
         return bm;
     }
 
+//    String mCurrentPhotoPath;
+
+    public static File createImageFile(Context context) throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp;
+        File storageDir = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "K2");
+
+        // Create directory if it does not exist
+        if (!storageDir.exists() && !storageDir.mkdirs()){
+            Log.d(TAG, "Failed to create directory");
+        }
+        File image = new File(storageDir.getPath() + File.separator + imageFileName);
+//        .createTempFile(
+//                imageFileName,  /* prefix */
+//                ".jpg",         /* suffix */
+//                storageDir      /* directory */
+//        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+//        mCurrentPhotoPath = image.getAbsolutePath();
+//        ((NavDrawerActivity)context).setCurrentPhotoPath("file:" + image.getAbsolutePath());
+        Log.d("BenD", "Photo path: " + image.getAbsolutePath());
+        return image;
+    }
 
     private static File getTempFile(Context context) {
         File imageFile = new File(context.getExternalCacheDir(), TEMP_IMAGE_NAME);
@@ -105,35 +145,75 @@ public class CameraUtils {
         return imageFile;
     }
 
-    private static Bitmap decodeBitmap(Context context, Uri theUri, int sampleSize) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = sampleSize;
-
-        AssetFileDescriptor fileDescriptor = null;
-        try {
-            fileDescriptor = context.getContentResolver().openAssetFileDescriptor(theUri, "r");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        Bitmap actuallyUsableBitmap = BitmapFactory.decodeFileDescriptor(
-                fileDescriptor.getFileDescriptor(), null, options);
-
-        Log.d(TAG, options.inSampleSize + " sample method bitmap ... " +
-                actuallyUsableBitmap.getWidth() + " " + actuallyUsableBitmap.getHeight());
-
-        return actuallyUsableBitmap;
+    private static Bitmap setPic(Context context, Uri filePath, int sampleSize) throws IOException {
+        Bitmap rawTakenImage = BitmapFactory.decodeFile(filePath.getPath());
+        Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(rawTakenImage, rawTakenImage.getWidth()/sampleSize);
+        // Configure byte output stream
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+// Compress the image further
+        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
+// Create a new file for the resized bitmap (`getPhotoFileUri` defined above)
+        Uri resizedUri = Uri.fromFile(createImageFile(context));
+        File resizedFile = new File(resizedUri.getPath());
+        resizedFile.createNewFile();
+        FileOutputStream fos = new FileOutputStream(resizedFile);
+// Write the bytes of the bitmap to file
+        fos.write(bytes.toByteArray());
+        fos.close();
+        return resizedBitmap;
+//        // Get the dimensions of the bitmap
+//        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+//        bmOptions.inJustDecodeBounds = true;
+//        BitmapFactory.decodeFile(filePath, bmOptions);
+//
+//        // Decode the image file into a Bitmap according to the scale factor (sample Size)
+//        bmOptions.inJustDecodeBounds = false;
+//        bmOptions.inSampleSize = sampleSize;
+//        bmOptions.inPurgeable = true;
+//
+//        Bitmap bitmap = BitmapFactory.decodeFile(filePath, bmOptions);
+//        Log.d(TAG,filePath);
+//        Log.d(TAG, String.valueOf(bitmap.getWidth()));
+//        return bitmap;
     }
+
+//
+//    private static Bitmap decodeBitmap(Context context, Uri theUri, int sampleSize) {
+//        BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inSampleSize = sampleSize;
+//
+//        AssetFileDescriptor fileDescriptor = null;
+//        try {
+//            fileDescriptor = context.getContentResolver().openAssetFileDescriptor(theUri, "r");
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//
+//        Log.d(TAG, "Found file: " + theUri);
+//
+//        Bitmap actuallyUsableBitmap = BitmapFactory.decodeFileDescriptor(
+//                fileDescriptor.getFileDescriptor(), null, options);
+//
+//        Log.d(TAG, options.inSampleSize + " sample method bitmap ... " +
+//                actuallyUsableBitmap.getWidth() + " " + actuallyUsableBitmap.getHeight());
+//
+//        return actuallyUsableBitmap;
+//    }
 
     /**
      * Resize to avoid using too much memory loading big images (e.g.: 2560*1920)
      **/
-    private static Bitmap getImageResized(Context context, Uri selectedImage) {
+    private static Bitmap getImageResized(Context context, Uri filePath) {
         Bitmap bm = null;
         int[] sampleSizes = new int[]{5, 3, 2, 1};
         int i = 0;
         do {
-            bm = decodeBitmap(context, selectedImage, sampleSizes[i]);
+            try {
+                bm = setPic(context, filePath, sampleSizes[i]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+//            bm = decodeBitmap(context, selectedImage, sampleSizes[i]);
             Log.d(TAG, "resizer: new bitmap width = " + bm.getWidth());
             i++;
         } while (bm.getWidth() < minWidthQuality && i < sampleSizes.length);
@@ -223,5 +303,13 @@ public class CameraUtils {
         values.put(MediaStore.MediaColumns.DATA, filePath);
 
         context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+    }
+
+    private static void galleryAddPic(final String filePath, Context context) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(filePath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        context.sendBroadcast(mediaScanIntent);
     }
 }
