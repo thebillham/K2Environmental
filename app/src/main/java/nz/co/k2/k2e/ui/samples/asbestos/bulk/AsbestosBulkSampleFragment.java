@@ -87,7 +87,7 @@ public class AsbestosBulkSampleFragment extends BaseFragment<FragmentSampleAsbes
             @Override
             public void onClick(View v) {
 //                sitePhotoFileName = CameraUtils.getFileName(asbestosBulkSampleViewModel.currentSample.get().sampleid);
-                sitePhotoFileName = CameraUtils.getFileName("JOB_jobnumber_SAMPLE_samplenumber");
+                sitePhotoFileName = CameraUtils.getFileName("J_jobnumber_S_samplenumber");
                 File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
                 mCurrentPhotoPath = mCurrentPhotoPath = storageDir.getAbsolutePath() + "/" + sitePhotoFileName;
                 Intent cameraIntent = CameraUtils.dispatchTakePictureIntent(getActivity(), mCurrentPhotoPath);

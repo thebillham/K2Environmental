@@ -24,7 +24,7 @@ public class CameraUtils {
 
     public static String getFileName(String prefix) {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        return "K2_" + prefix + "_TIME_" + timeStamp + ".jpg";
+        return "K2_" + prefix + "_T_" + timeStamp + ".jpg";
     }
 
     public static Intent dispatchTakePictureIntent(Context context, String mCurrentPhotoPath) {

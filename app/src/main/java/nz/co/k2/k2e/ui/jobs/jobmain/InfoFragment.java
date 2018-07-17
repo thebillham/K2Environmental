@@ -90,7 +90,7 @@ public class InfoFragment extends BaseFragment<FragmentJobmainInfoBinding, JobVi
         jobTitlePhotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sitePhotoFileName = CameraUtils.getFileName("JOB_" + mJobViewModel.currentJob.get().getJobNumber());
+                sitePhotoFileName = CameraUtils.getFileName("J_" + mJobViewModel.currentJob.get().getJobNumber());
                 File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
                 mCurrentPhotoPath = mCurrentPhotoPath = storageDir.getAbsolutePath() + "/" + sitePhotoFileName;
                 Intent cameraIntent = CameraUtils.dispatchTakePictureIntent(getActivity(), mCurrentPhotoPath);
