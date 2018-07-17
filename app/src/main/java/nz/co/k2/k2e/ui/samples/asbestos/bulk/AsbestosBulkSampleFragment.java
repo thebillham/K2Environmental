@@ -3,7 +3,9 @@ package nz.co.k2.k2e.ui.samples.asbestos.bulk;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -19,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.inject.Inject;
@@ -28,6 +31,9 @@ import nz.co.k2.k2e.BR;
 import nz.co.k2.k2e.R;
 import nz.co.k2.k2e.databinding.FragmentSampleAsbestosBulkBinding;
 import nz.co.k2.k2e.ui.base.BaseFragment;
+import nz.co.k2.k2e.utils.CameraUtils;
+
+import static android.app.Activity.RESULT_OK;
 
 public class AsbestosBulkSampleFragment extends BaseFragment<FragmentSampleAsbestosBulkBinding, AsbestosBulkSampleViewModel> {
     FragmentSampleAsbestosBulkBinding fragmentSampleAsbestosBulkBinding;
@@ -53,7 +59,11 @@ public class AsbestosBulkSampleFragment extends BaseFragment<FragmentSampleAsbes
         return asbestosBulkSampleViewModel;
     }
 
-    ImageView mImageView;
+    private ImageView mImageView;
+    private String sitePhotoFileName;
+    String mCurrentPhotoPath;
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     // Store instance variables based on arguments passed
     @Override
@@ -76,7 +86,12 @@ public class AsbestosBulkSampleFragment extends BaseFragment<FragmentSampleAsbes
         jobTitlePhotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivityForResult(CameraUtils.getPickImageIntent(getActivity()), PICK_IMAGE_ID);
+//                sitePhotoFileName = CameraUtils.getFileName(asbestosBulkSampleViewModel.currentSample.get().sampleid);
+                sitePhotoFileName = CameraUtils.getFileName("JOB_jobnumber_SAMPLE_samplenumber");
+                File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                mCurrentPhotoPath = mCurrentPhotoPath = storageDir.getAbsolutePath() + "/" + sitePhotoFileName;
+                Intent cameraIntent = CameraUtils.dispatchTakePictureIntent(getActivity(), mCurrentPhotoPath);
+                startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
             }
         });
 
@@ -103,21 +118,18 @@ public class AsbestosBulkSampleFragment extends BaseFragment<FragmentSampleAsbes
         super.onViewCreated(view, savedInstanceState);
         fragmentSampleAsbestosBulkBinding = getViewDataBinding();
     }
-//
-//    // Activity result key for camera
-//    private static final int PICK_IMAGE_ID = 1111;
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data){
-//        switch(requestCode){
-//            case PICK_IMAGE_ID:
-//
-//                Bitmap bitmap = null;
-//                bitmap = CameraUtils.getImageFromResult(getActivity(), resultCode, data);
-//                mImageView.setImageBitmap(bitmap);
-//                break;
-//            default:
-//                super.onActivityResult(requestCode,resultCode,data);
-//                break;
-//        }
-//    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            File imgFile = new File(mCurrentPhotoPath);
+            if (imgFile.exists()){
+//                asbestosBulkSampleViewModel.currentSample.get().setSamplePhoto(sitePhotoFileName);
+//                Log.d("BenD", "Job site photo file name: " + mJobViewModel.currentJob.get().getSitePhotoFileName());
+                CameraUtils.setPic(mImageView, mCurrentPhotoPath);
+//                forget this until i can get it working (adding to gallery)
+                CameraUtils.galleryAddPic(getActivity(), mCurrentPhotoPath);
+            }
+        }
+    }
 }

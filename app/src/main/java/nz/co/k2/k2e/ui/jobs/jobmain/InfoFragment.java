@@ -3,9 +3,6 @@ package nz.co.k2.k2e.ui.jobs.jobmain;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -49,8 +46,7 @@ public class InfoFragment extends BaseFragment<FragmentJobmainInfoBinding, JobVi
     private String sitePhotoFileName;
     String mCurrentPhotoPath;
 
-
-//    private static final int PICK_IMAGE_ID = 1111;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
     public int getBindingVariable() {
@@ -94,7 +90,7 @@ public class InfoFragment extends BaseFragment<FragmentJobmainInfoBinding, JobVi
         jobTitlePhotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sitePhotoFileName = CameraUtils.getFileName(mJobViewModel.currentJob.get().getJobNumber());
+                sitePhotoFileName = CameraUtils.getFileName("JOB_" + mJobViewModel.currentJob.get().getJobNumber());
                 File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
                 mCurrentPhotoPath = mCurrentPhotoPath = storageDir.getAbsolutePath() + "/" + sitePhotoFileName;
                 Intent cameraIntent = CameraUtils.dispatchTakePictureIntent(getActivity(), mCurrentPhotoPath);
@@ -114,23 +110,11 @@ public class InfoFragment extends BaseFragment<FragmentJobmainInfoBinding, JobVi
         return infoFragment;
     }
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState){
-//        super.onCreate(savedInstanceState);
-////        if (mJobViewModel.currentJob.get().getSitePhotoFileName() != "") {
-////            File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-////            mCurrentPhotoPath = storageDir.getAbsolutePath() + "/" + sitePhotoFileName;
-////            Log.d("BenD",mCurrentPhotoPath);
-////        }
-//    }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fragmentJobmainInfoBinding = getViewDataBinding();
     }
-
-    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -22,9 +22,9 @@ public class CameraUtils {
 
     public static int minWidthQuality = DEFAULT_MIN_WIDTH_QUALITY;
 
-    public static String getFileName(String jobNumber) {
+    public static String getFileName(String prefix) {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        return "K2_JobNumber_" + jobNumber + "_" + timeStamp + ".jpg";
+        return "K2_" + prefix + "_TIME_" + timeStamp + ".jpg";
     }
 
     public static Intent dispatchTakePictureIntent(Context context, String mCurrentPhotoPath) {
