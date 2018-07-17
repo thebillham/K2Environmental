@@ -31,6 +31,9 @@ public class BaseJob {
     @Expose
     public String lastModified;
 
+    @Expose
+    public String sitePhotoFileName;
+
     public String getUuid() {
         return uuid;
     }
@@ -86,5 +89,9 @@ public class BaseJob {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getSitePhotoFileName() { return sitePhotoFileName; }
+
+    public void setSitePhotoFileName(String sitePhotoFileName) { this.sitePhotoFileName = sitePhotoFileName; }
 
 }

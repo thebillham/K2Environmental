@@ -71,6 +71,12 @@
     <string name="fab_new_asbestos_bulk">New Bulk Sample</string>
     <string name="fab_new_asbestos_air">New Air Sample</string>
     <string name="pick_image_intent_text">Pick image intent</string>
+    <string name="sample_survey_desc">This survey is used for bulk sampling of presumed asbestos-containing materials. Unlike a management or refurbishment/demolition survey, this does not involve an inspection of the property. However, it does include a material risk assessment of the sampled material.</string>
+    <string name="sample_survey_title">Sampling Survey</string>
+    <string name="bulk_sampling_title">Bulk Sampling</string>
+    <string name="bulk_sampling_desc">This task involves bulk sampling of presumed asbestos-containing materials. The items that are to be sampled are directed by the client. No assessment of the premises or the condition of the materials is made.</string>
+    <string name="management_survey_desc">This survey involves a thorough inspection of the premises and notes the condition and extent of all asbestos-containing materials that may be disturbed during day-to-day occupation of the premises or during routine maintenance.</string>
+    <string name="management_survey_title">Management Survey</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

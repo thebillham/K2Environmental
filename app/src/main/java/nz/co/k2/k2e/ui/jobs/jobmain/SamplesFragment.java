@@ -24,8 +24,6 @@ import nz.co.k2.k2e.BR;
 import nz.co.k2.k2e.R;
 import nz.co.k2.k2e.databinding.FragmentJobmainSamplesBinding;
 import nz.co.k2.k2e.ui.base.BaseFragment;
-import nz.co.k2.k2e.ui.base.BaseViewModel;
-import nz.co.k2.k2e.utils.ImageUtils;
 
 public class SamplesFragment extends BaseFragment<FragmentJobmainSamplesBinding, JobViewModel> {
 

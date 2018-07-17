@@ -3,8 +3,6 @@ package nz.co.k2.k2e.ui.samples.asbestos.bulk;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -28,9 +28,6 @@ import nz.co.k2.k2e.BR;
 import nz.co.k2.k2e.R;
 import nz.co.k2.k2e.databinding.FragmentSampleAsbestosBulkBinding;
 import nz.co.k2.k2e.ui.base.BaseFragment;
-import nz.co.k2.k2e.ui.navdrawer.NavDrawerActivity;
-import nz.co.k2.k2e.utils.CameraUtils;
-import nz.co.k2.k2e.utils.ImageUtils;
 
 public class AsbestosBulkSampleFragment extends BaseFragment<FragmentSampleAsbestosBulkBinding, AsbestosBulkSampleViewModel> {
     FragmentSampleAsbestosBulkBinding fragmentSampleAsbestosBulkBinding;
@@ -79,7 +76,7 @@ public class AsbestosBulkSampleFragment extends BaseFragment<FragmentSampleAsbes
         jobTitlePhotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(CameraUtils.getPickImageIntent(getActivity()), PICK_IMAGE_ID);
+//                startActivityForResult(CameraUtils.getPickImageIntent(getActivity()), PICK_IMAGE_ID);
             }
         });
 
@@ -106,19 +103,21 @@ public class AsbestosBulkSampleFragment extends BaseFragment<FragmentSampleAsbes
         super.onViewCreated(view, savedInstanceState);
         fragmentSampleAsbestosBulkBinding = getViewDataBinding();
     }
-
-    // Activity result key for camera
-    private static final int PICK_IMAGE_ID = 1111;
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        switch(requestCode){
-            case PICK_IMAGE_ID:
-                Bitmap bitmap = CameraUtils.getImageFromResult(getActivity(), resultCode, data);
-                mImageView.setImageBitmap(bitmap);
-                break;
-            default:
-                super.onActivityResult(requestCode,resultCode,data);
-                break;
-        }
-    }
+//
+//    // Activity result key for camera
+//    private static final int PICK_IMAGE_ID = 1111;
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data){
+//        switch(requestCode){
+//            case PICK_IMAGE_ID:
+//
+//                Bitmap bitmap = null;
+//                bitmap = CameraUtils.getImageFromResult(getActivity(), resultCode, data);
+//                mImageView.setImageBitmap(bitmap);
+//                break;
+//            default:
+//                super.onActivityResult(requestCode,resultCode,data);
+//                break;
+//        }
+//    }
 }

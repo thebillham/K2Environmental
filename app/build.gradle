@@ -37,6 +37,10 @@ android {
     }
 }
 
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
 /*
 Dependency versions are defined in the top level build.gradle file. This helps keep track of all versions in a single place
 */
@@ -59,6 +63,9 @@ dependencies {
 
     // FAB
     implementation 'com.github.clans:fab:1.6.2'
+
+    // Fotoapparat
+    implementation 'io.fotoapparat.fotoapparat:library:2.3.1'
 
     // Bottom Nav
     implementation 'com.aurelhubert:ahbottomnavigation:2.0.4'

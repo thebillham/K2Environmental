@@ -17,11 +17,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-
-import com.bumptech.glide.Glide;
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -35,7 +30,6 @@ import nz.co.k2.k2e.databinding.ActivityNavDrawerBinding;
 import nz.co.k2.k2e.databinding.NavHeaderNavDrawerBinding;
 import nz.co.k2.k2e.ui.base.BaseActivity;
 import nz.co.k2.k2e.ui.calendar.CalendarFragment;
-import nz.co.k2.k2e.ui.custom.RoundedImageView;
 import nz.co.k2.k2e.ui.equipment.EquipmentFragment;
 import nz.co.k2.k2e.ui.jobs.myjobs.JobsFragment;
 import nz.co.k2.k2e.ui.lab.AsbestosLabFragment;
@@ -43,7 +37,7 @@ import nz.co.k2.k2e.ui.login.GoogleLoginActivity;
 import nz.co.k2.k2e.ui.mydetails.MyDetailsFragment;
 import nz.co.k2.k2e.ui.notifications.NotificationsFragment;
 import nz.co.k2.k2e.ui.settings.AppSettingsFragment;
-import nz.co.k2.k2e.ui.tasks.CurrentTasksFragment;
+import nz.co.k2.k2e.ui.currenttasks.CurrentTasksFragment;
 import nz.co.k2.k2e.ui.training.TrainingFragment;
 
 public class NavDrawerActivity extends BaseActivity<ActivityNavDrawerBinding, NavDrawerViewModel>
