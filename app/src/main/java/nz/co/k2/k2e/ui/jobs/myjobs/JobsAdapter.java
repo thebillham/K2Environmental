@@ -3,7 +3,6 @@ package nz.co.k2.k2e.ui.jobs.myjobs;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import nz.co.k2.k2e.databinding.ItemJobsEmptyViewBinding;
@@ -89,6 +90,7 @@ public class JobsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
     }
 
+//    @RequiresApi(api = Build.VERSION_CODES.N)
     public void addItems(List<JobsItemViewModel> repoList) {
         mJobsResponseList.clear();
         mJobsResponseList.addAll(repoList);

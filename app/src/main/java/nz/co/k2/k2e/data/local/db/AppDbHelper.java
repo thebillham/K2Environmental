@@ -2,6 +2,7 @@ package nz.co.k2.k2e.data.local.db;
 
 import android.util.Log;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -14,6 +15,7 @@ import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.functions.Action;
 import nz.co.k2.k2e.data.model.db.WfmJob;
+import nz.co.k2.k2e.data.model.db.entities.samples.AsbestosBulkSample;
 import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
 
 @Singleton
@@ -181,9 +183,53 @@ public class AppDbHelper implements DbHelper {
         });
     }
 
-    //
-    // JOBS
-    //
+    @Override
+    public Maybe<AsbestosBulkSample> getAsbestosBulkSampleByUuid(String uuid) {
+        return Maybe.fromCallable(new Callable<AsbestosBulkSample>() {
+            @Override
+            public AsbestosBulkSample call() throws Exception {
+                return mAppDatabase.asbestosBulkSampleDao().getSampleByUuid(uuid);
+            }
+        });
+    }
 
+    @Override
+    public Single<Long> insertAsbestosBulkSample(AsbestosBulkSample bulkSample) {
+        return Single.fromCallable(new Callable<Long>() {
+            @Override
+            public Long call() throws Exception {
+                return mAppDatabase.asbestosBulkSampleDao().insert(bulkSample);
+            }
+        });
+    }
 
+    @Override
+    public Single<List<Long>> insertAllAsbestosBulkSamples(List<AsbestosBulkSample> bulkSamples) {
+        return Single.fromCallable(new Callable<List<Long>>() {
+            @Override
+            public List<Long> call() throws Exception {
+                return Arrays.asList(mAppDatabase.asbestosBulkSampleDao().insertAll(bulkSamples));
+            }
+        });
+    }
+
+    @Override
+    public Observable<List<AsbestosBulkSample>> getAllAsbestosBulkSamples() {
+        return Observable.fromCallable(new Callable<List<AsbestosBulkSample>>() {
+            @Override
+            public List<AsbestosBulkSample> call() throws Exception {
+                return mAppDatabase.asbestosBulkSampleDao().loadAll();
+            }
+        });
+    }
+
+    @Override
+    public Maybe<List<AsbestosBulkSample>> getAllAsbestosBulkSamplesByJobNumber(String jobNumber) {
+        return Maybe.fromCallable(new Callable<List<AsbestosBulkSample>>() {
+            @Override
+            public List<AsbestosBulkSample> call() throws Exception {
+                return mAppDatabase.asbestosBulkSampleDao().loadAllByJobNumber(jobNumber);
+            }
+        });
+    }
 }

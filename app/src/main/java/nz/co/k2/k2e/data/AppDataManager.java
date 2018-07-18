@@ -24,6 +24,7 @@ import io.reactivex.schedulers.Schedulers;
 import nz.co.k2.k2e.data.local.db.DbHelper;
 import nz.co.k2.k2e.data.local.prefs.PreferencesHelper;
 import nz.co.k2.k2e.data.model.db.WfmJob;
+import nz.co.k2.k2e.data.model.db.entities.samples.AsbestosBulkSample;
 import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
 import nz.co.k2.k2e.data.remote.ApiHelper;
 
@@ -200,6 +201,31 @@ public class AppDataManager implements DataManager {
     @Override
     public Single<Integer> updateJob(BaseJob baseJob) {
         return mDbHelper.updateJob(baseJob);
+    }
+
+    @Override
+    public Maybe<AsbestosBulkSample> getAsbestosBulkSampleByUuid(String uuid) {
+        return mDbHelper.getAsbestosBulkSampleByUuid(uuid);
+    }
+
+    @Override
+    public Single<Long> insertAsbestosBulkSample(AsbestosBulkSample bulkSample) {
+        return mDbHelper.insertAsbestosBulkSample(bulkSample);
+    }
+
+    @Override
+    public Single<List<Long>> insertAllAsbestosBulkSamples(List<AsbestosBulkSample> bulkSamples) {
+        return mDbHelper.insertAllAsbestosBulkSamples(bulkSamples);
+    }
+
+    @Override
+    public Observable<List<AsbestosBulkSample>> getAllAsbestosBulkSamples() {
+        return mDbHelper.getAllAsbestosBulkSamples();
+    }
+
+    @Override
+    public Maybe<List<AsbestosBulkSample>> getAllAsbestosBulkSamplesByJobNumber(String jobNumber) {
+        return mDbHelper.getAllAsbestosBulkSamplesByJobNumber(jobNumber);
     }
 
     @Override

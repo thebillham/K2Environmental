@@ -27,6 +27,8 @@ import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import nz.co.k2.k2e.BR;
 import nz.co.k2.k2e.R;
 import nz.co.k2.k2e.databinding.FragmentSampleAsbestosBulkBinding;
@@ -99,7 +101,15 @@ public class AsbestosBulkSampleFragment extends BaseFragment<FragmentSampleAsbes
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"Sample Added", Toast.LENGTH_SHORT).show();
+                getCompositeDisposable().add(asbestosBulkSampleViewModel.getDataManager().insertAsbestosBulkSample(asbestosBulkSampleViewModel.currentSample.get())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(id -> {
+                            getActivity().getSupportFragmentManager().popBackStackImmediate();
+                            Toast.makeText(getActivity(), "Sample Added: " + id, Toast.LENGTH_SHORT).show();
+                        }, throwable -> {
+                            throwable.getStackTrace();
+                        }));
             }
         });
 

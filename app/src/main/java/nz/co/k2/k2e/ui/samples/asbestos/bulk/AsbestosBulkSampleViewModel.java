@@ -20,6 +20,8 @@ public class AsbestosBulkSampleViewModel extends BaseViewModel<JobsNavigator> {
     public AsbestosBulkSampleViewModel(DataManager dataManager,
                         SchedulerProvider schedulerProvider) {
         super(dataManager, schedulerProvider);
+        AsbestosBulkSample bulkSample = new AsbestosBulkSample();
+        currentSample.set(bulkSample);
     }
 
     // This function gets JobsJobs from the API and saves to DB

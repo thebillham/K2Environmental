@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
 import java.io.File;
 
 import javax.inject.Inject;
@@ -87,12 +89,17 @@ public class InfoFragment extends BaseFragment<FragmentJobmainInfoBinding, JobVi
         mImageView = view.findViewById(R.id.image_title_photo);
         ImageButton jobTitlePhotoBtn = view.findViewById(R.id.btn_title_photo);
 
+        // Load site photo image if one already taken
+        if (mJobViewModel.currentJob.get().getSitePhotoFileName() != "") {
+            Glide.with(mImageView.getContext()).load(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "/" + mJobViewModel.currentJob.get().getSitePhotoFileName()).into(mImageView);
+        }
+
         jobTitlePhotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sitePhotoFileName = CameraUtils.getFileName("J_" + mJobViewModel.currentJob.get().getJobNumber());
                 File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-                mCurrentPhotoPath = mCurrentPhotoPath = storageDir.getAbsolutePath() + "/" + sitePhotoFileName;
+                mCurrentPhotoPath = storageDir.getAbsolutePath() + "/" + sitePhotoFileName;
                 Intent cameraIntent = CameraUtils.dispatchTakePictureIntent(getActivity(), mCurrentPhotoPath);
                 startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -125,7 +132,7 @@ public class InfoFragment extends BaseFragment<FragmentJobmainInfoBinding, JobVi
                 Log.d("BenD", "Job site photo file name: " + mJobViewModel.currentJob.get().getSitePhotoFileName());
                 CameraUtils.setPic(mImageView, mCurrentPhotoPath);
 //                forget this until i can get it working (adding to gallery)
-                CameraUtils.galleryAddPic(getActivity(), mCurrentPhotoPath);
+//                CameraUtils.galleryAddPic(getActivity(), mCurrentPhotoPath);
             }
         }
     }

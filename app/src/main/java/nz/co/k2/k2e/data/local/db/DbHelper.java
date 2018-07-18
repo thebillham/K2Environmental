@@ -23,6 +23,7 @@ import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import nz.co.k2.k2e.data.model.db.WfmJob;
+import nz.co.k2.k2e.data.model.db.entities.samples.AsbestosBulkSample;
 import nz.co.k2.k2e.data.model.db.jobs.BaseJob;
 
 public interface DbHelper {
@@ -45,4 +46,12 @@ public interface DbHelper {
     Completable deleteJob(String jobNumber);
     Single<Integer> updateJob(BaseJob baseJob);
 
+    // SAMPLES
+
+    // ASBESTOS BULK SAMPLES
+    Maybe<AsbestosBulkSample> getAsbestosBulkSampleByUuid(String uuid);
+    Single<Long> insertAsbestosBulkSample(AsbestosBulkSample bulkSample);
+    Single<List<Long>> insertAllAsbestosBulkSamples(List<AsbestosBulkSample> bulkSamples);
+    Observable<List<AsbestosBulkSample>> getAllAsbestosBulkSamples();
+    Maybe<List<AsbestosBulkSample>> getAllAsbestosBulkSamplesByJobNumber(String jobNumber);
 }

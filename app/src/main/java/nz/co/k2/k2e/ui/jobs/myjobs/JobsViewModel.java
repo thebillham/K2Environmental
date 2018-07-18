@@ -6,6 +6,8 @@ import android.databinding.ObservableList;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Singleton;
@@ -31,6 +33,13 @@ public class JobsViewModel extends BaseViewModel<JobsNavigator> {
     }
 
     public void addJobsItemsToList(List<JobsItemViewModel> jobsItems) {
+        // sort repo list by alphabetical order
+        Collections.sort(jobsItems, new Comparator<JobsItemViewModel>() {
+            @Override
+            public int compare(JobsItemViewModel o1, JobsItemViewModel o2) {
+                return o1.getJobNumber().compareTo(o2.getJobNumber());
+            }
+        });
         jobsItemViewModels.clear();
         jobsItemViewModels.addAll(jobsItems);
     }

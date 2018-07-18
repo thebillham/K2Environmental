@@ -9,6 +9,8 @@ import android.databinding.ObservableInt;
 import android.databinding.ObservableList;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +47,7 @@ public class JobViewModel extends BaseViewModel<JobsNavigator> {
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(job -> {
                         currentJob.set(job);
+                        Log.d("BenD","Viewmodel set");
                 }, throwable -> {
                     throwable.getStackTrace();
                 }));
